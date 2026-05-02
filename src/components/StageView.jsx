@@ -6,36 +6,17 @@ import VoucherDisplay from "./VoucherDisplay";
 import MugshotGenerator from "./MugshotGenerator";
 import MockStripePayment from "./MockStripePayment";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
-import { FIREBASE_CONFIG } from "../config/firebase";
-
-let db = null;
-
-async function getFirebase() {
-  if (db) return db;
-  try {
-    const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-    const { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-    const app = getApps().length === 0 ? initializeApp(FIREBASE_CONFIG) : getApps()[0];
-    db = getFirestore(app);
-    return { db, doc, setDoc, onSnapshot, serverTimestamp };
-  } catch (e) {
-    console.warn("Firebase unavailable", e);
-    return null;
-  }
-}
+import { syncAndWait } from "../utils/sync";
 
 export default function StageView({ stage, player, onComplete }) {
   const [phase, setPhase] = useState("booting");
   const [gpsData, setGpsData] = useState({ inside: false, distance: null, accuracy: null });
   const [wordInput, setWordInput] = useState("");
   const [wordError, setWordError] = useState(false);
-  const [clueRevealed, setClueRevealed] = useState(false);
   const [waitingForPartner, setWaitingForPartner] = useState(false);
-  const [partnerReady, setPartnerReady] = useState(false);
   const [myHalfWord, setMyHalfWord] = useState(null);
-  const [capturedPhoto, setCapturedPhoto] = useState(null);
   const intervalRef = useRef(null);
-  const unsubRef = useRef(null);
+  const cleanupSyncRef = useRef(null);
 
   const playerData = stage[player.id];
 
@@ -63,69 +44,32 @@ export default function StageView({ stage, player, onComplete }) {
   useEffect(() => {
     return () => {
       clearInterval(intervalRef.current);
-      unsubRef.current?.();
+      cleanupSyncRef.current?.();
     };
   }, []);
 
   const handleTypingDone = () => setPhase("scanning");
 
   const markTaskComplete = useCallback(async () => {
-    if (stage.unlockType === "wordSplit") {
-      setMyHalfWord(playerData.wordHalf);
-      setWaitingForPartner(true);
-    }
-    await syncTaskComplete();
-  }, [stage, playerData, player]);
-
-  const syncTaskComplete = useCallback(async () => {
-    // If no clue to show, just complete the stage
     if (!playerData.clue) {
       setPhase("complete");
       onComplete(stage.index);
       return;
     }
 
-    try {
-      const fb = await getFirebase();
-      if (!fb) {
-        setClueRevealed(true);
-        setPhase("clue");
-        return;
-      }
-      const { db, doc, setDoc, onSnapshot, serverTimestamp } = fb;
-      await setDoc(
-        doc(db, "grad_protocol", "sync", stage.id, player.id),
-        { done: true, timestamp: serverTimestamp() },
-        { merge: true }
-      );
-      const otherPlayer = player.id === "gupta" ? "gohil" : "gupta";
-      unsubRef.current = onSnapshot(
-        doc(db, "grad_protocol", "sync", stage.id, otherPlayer),
-        (snap) => {
-          if (snap.exists() && snap.data()?.done) {
-            setPartnerReady(true);
-            setWaitingForPartner(false);
-            setClueRevealed(true);
-            setPhase("clue");
-            unsubRef.current?.();
-          }
-        }
-      );
-      // Also show clue immediately in dev mode
-      if (import.meta.env.DEV) {
-        setTimeout(() => {
-          setPartnerReady(true);
-          setWaitingForPartner(false);
-          setClueRevealed(true);
-          setPhase("clue");
-        }, 1500);
-      }
-    } catch (e) {
-      console.warn("Sync failed, continuing offline", e);
-      setClueRevealed(true);
-      setPhase("clue");
+    if (stage.unlockType === "wordSplit") {
+      setMyHalfWord(playerData.wordHalf);
     }
-  }, [stage, player, playerData, onComplete]);
+
+    setWaitingForPartner(true);
+
+    const cleanup = await syncAndWait(stage.id, player.id, () => {
+      setWaitingForPartner(false);
+      setPhase("clue");
+    });
+
+    cleanupSyncRef.current = cleanup;
+  }, [stage, playerData, player, onComplete]);
 
   const handleWordSubmit = () => {
     const combined = wordInput.trim().toUpperCase();
@@ -135,25 +79,6 @@ export default function StageView({ stage, player, onComplete }) {
     } else {
       setWordError(true);
       setTimeout(() => setWordError(false), 1500);
-    }
-  };
-
-  const handlePhotoCapture = async (photoData) => {
-    setCapturedPhoto(photoData);
-    await markTaskComplete();
-  };
-
-  const handleVoucherConfirm = async () => {
-    await markTaskComplete();
-  };
-
-  const handleArrest = async () => {
-    await markTaskComplete();
-  };
-
-  const handlePasscodeSubmit = async (code, correctCode) => {
-    if (code.trim().toUpperCase() === correctCode.toUpperCase()) {
-      await markTaskComplete();
     }
   };
 
@@ -188,7 +113,7 @@ export default function StageView({ stage, player, onComplete }) {
       )}
 
       <AnimatePresence>
-        {(phase === "scanning" || phase === "unlocked" || phase === "voucher" || phase === "clue" || phase === "wordUnlock") && (
+        {phase !== "booting" && phase !== "complete" && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -238,7 +163,9 @@ export default function StageView({ stage, player, onComplete }) {
                 </div>
 
                 {stage.validation === "photo" && (
-                  <PhotoCapture onComplete={handlePhotoCapture} />
+                  <PhotoCapture onComplete={(photo) => {
+                    markTaskComplete();
+                  }} />
                 )}
 
                 {stage.validation === "voucher" && (
@@ -250,17 +177,17 @@ export default function StageView({ stage, player, onComplete }) {
                 )}
 
                 {stage.validation === "arrest" && player.id === "gohil" && (
-                  <MugshotGenerator onComplete={handleArrest} />
+                  <MugshotGenerator onComplete={markTaskComplete} />
                 )}
 
                 {stage.validation === "arrest" && player.id === "gupta" && (
-                  <BailAuth onComplete={handleArrest} stage={stage} />
+                  <BailAuth onComplete={markTaskComplete} stage={stage} />
                 )}
 
                 {stage.validation === "passcode" && (
                   <PasscodeEntry
                     correctCode={stage.passcode}
-                    onComplete={handlePasscodeSubmit}
+                    onComplete={markTaskComplete}
                   />
                 )}
               </motion.div>
@@ -274,15 +201,15 @@ export default function StageView({ stage, player, onComplete }) {
                   stageLabel={stage.label}
                 />
                 <button
-                  onClick={handleVoucherConfirm}
-                  className="w-full border border-green-500 text-green-400 py-3 recovery rounded hover:bg-green-950/30 transition text-sm tracking-wider"
+                  onClick={markTaskComplete}
+                  className="w-full border border-green-500 text-green-400 py-3 rounded hover:bg-green-950/30 transition text-sm tracking-wider"
                 >
                   [ VOUCHER USED — PROCEED ]
                 </button>
               </div>
             )}
 
-            {phase === "clue" && playerData.clue && (
+            {(phase === "clue" || waitingForPartner) && (
               <ClueReveal
                 clue={playerData.clue}
                 wordHalf={myHalfWord}
@@ -309,23 +236,6 @@ export default function StageView({ stage, player, onComplete }) {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {capturedPhoto && phase !== "unlocked" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="border border-green-900 rounded overflow-hidden"
-        >
-          <img
-            src={capturedPhoto}
-            alt="Captured"
-            className="w-full object-cover max-h-48"
-          />
-          <p className="text-green-600 text-xs text-center py-1">
-            ✓ Photo captured
-          </p>
-        </motion.div>
-      )}
 
       {phase === "complete" && (
         <motion.div
@@ -354,11 +264,7 @@ function ClueReveal({ clue, wordHalf, unlockType, waitingForPartner, onProceedTo
   const isGupta = player?.id === "gupta";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-3"
-    >
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
       {waitingForPartner ? (
         <div className="border border-amber-800 rounded p-3 bg-amber-950/20 flex items-center gap-3">
           <motion.div
@@ -381,20 +287,12 @@ function ClueReveal({ clue, wordHalf, unlockType, waitingForPartner, onProceedTo
           {!revealed ? (
             <button
               onClick={() => setRevealed(true)}
-              className={`w-full border py-3 rounded transition text-sm tracking-wider ${
-                isGupta
-                  ? "border-amber-500 text-amber-400 hover:bg-amber-950/30"
-                  : "border-amber-500 text-amber-400 hover:bg-amber-950/30"
-              }`}
+              className="w-full border border-amber-500 text-amber-400 py-3 rounded hover:bg-amber-950/30 transition text-sm tracking-wider"
             >
               [ REVEAL CLUE ]
             </button>
           ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-3"
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
               <div className="border border-amber-700 rounded p-4 bg-amber-950/10">
                 <p className="text-amber-300 text-sm leading-relaxed italic">
                   "{clue}"
@@ -406,7 +304,7 @@ function ClueReveal({ clue, wordHalf, unlockType, waitingForPartner, onProceedTo
                   <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
                     Your Half of the Key
                   </p>
-                  <p className="text-green-400 text-2xl font-bold tracking-widest">
+                  <p className={`text-2xl font-bold tracking-widest ${isGupta ? "text-green-400" : "text-amber-400"}`}>
                     {wordHalf}
                   </p>
                 </div>
@@ -446,15 +344,9 @@ function ClueReveal({ clue, wordHalf, unlockType, waitingForPartner, onProceedTo
 function WordUnlock({ wordInput, setWordInput, wordError, onSubmit, player }) {
   const isGupta = player?.id === "gupta";
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-3"
-    >
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
       <div className="border border-green-900/50 rounded p-3 bg-black/20">
-        <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
-          Combined Key Required
-        </p>
+        <p className="text-green-600 text-xs uppercase tracking-widest mb-1">Combined Key Required</p>
         <p className="text-green-700 text-xs">
           Compare your half with your partner's. Enter the combined word to unlock the next stage.
         </p>
@@ -474,9 +366,7 @@ function WordUnlock({ wordInput, setWordInput, wordError, onSubmit, player }) {
         }`}
       />
       {wordError && (
-        <p className="text-red-400 text-xs">
-          INCORRECT — Check your halves and try again.
-        </p>
+        <p className="text-red-400 text-xs">INCORRECT — Check your halves and try again.</p>
       )}
       <button
         onClick={onSubmit}
@@ -498,19 +388,6 @@ function BailAuth({ onComplete, stage }) {
 
   const authoriseBail = async () => {
     setStatus("authorising");
-    try {
-      const fb = await getFirebase();
-      if (fb) {
-        const { db, doc, setDoc, serverTimestamp } = fb;
-        await setDoc(
-          doc(db, "grad_protocol", "bail", stage.id),
-          { authorised: true, authorisedAt: serverTimestamp() },
-          { merge: true }
-        );
-      }
-    } catch (e) {
-      console.warn("Bail sync failed", e);
-    }
     setTimeout(() => {
       setStatus("authorised");
       onComplete();
@@ -565,7 +442,7 @@ function PasscodeEntry({ correctCode, onComplete }) {
 
   const handleSubmit = () => {
     if (input.trim().toUpperCase() === correctCode.toUpperCase()) {
-      onComplete(input, correctCode);
+      onComplete();
     } else {
       setError(true);
       setTimeout(() => setError(false), 1500);
@@ -632,20 +509,12 @@ function PhotoCapture({ onComplete }) {
     setCameraActive(false);
   };
 
-  const confirm = () => {
-    onComplete(preview);
-  };
-
-  const retake = () => {
-    setPreview(null);
-    startCamera();
-  };
+  const confirm = () => onComplete(preview);
+  const retake = () => { setPreview(null); startCamera(); };
 
   return (
     <div className="space-y-3">
-      <p className="text-green-600 text-xs uppercase tracking-wider">
-        Photo Proof Required
-      </p>
+      <p className="text-green-600 text-xs uppercase tracking-wider">Photo Proof Required</p>
 
       {!cameraActive && !preview && (
         <button
@@ -686,12 +555,11 @@ function PhotoCapture({ onComplete }) {
               onClick={confirm}
               className="border border-green-500 text-green-400 py-2 rounded text-xs tracking-wider hover:bg-green-950/30 transition"
             >
-              [ CONFIRM ]
+              [ CONFIRM ✓ ]
             </button>
           </div>
         </div>
       )}
-
       <canvas ref={canvasRef} className="hidden" />
     </div>
   );
