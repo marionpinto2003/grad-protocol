@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { STAGES } from "../config/locations";
 
-export default function MissionProgress({ completedStages, currentStage }) {
+export default function MissionProgress({ completedStages, currentStage, player }) {
+  const isGupta = player?.id === "gupta";
+
   return (
     <div className="font-mono">
       <p className="text-green-700 text-xs uppercase tracking-widest mb-3">
-        Mission Progress
+        Mission Progress — Operative {player?.codename}
       </p>
       <div className="space-y-1">
         {STAGES.map((stage, i) => {
@@ -20,7 +22,9 @@ export default function MissionProgress({ completedStages, currentStage }) {
               animate={{ opacity: isLocked ? 0.35 : 1 }}
               className={`flex items-center gap-2 text-xs py-1 px-2 rounded transition-colors ${
                 isCurrent
-                  ? "bg-green-950/50 border border-green-800"
+                  ? isGupta
+                    ? "bg-green-950/50 border border-green-800"
+                    : "bg-amber-950/30 border border-amber-900"
                   : "border border-transparent"
               }`}
             >
@@ -29,7 +33,9 @@ export default function MissionProgress({ completedStages, currentStage }) {
                   isCompleted
                     ? "border-green-500 text-green-400 bg-green-950/50"
                     : isCurrent
-                    ? "border-amber-500 text-amber-400"
+                    ? isGupta
+                      ? "border-green-500 text-green-400"
+                      : "border-amber-500 text-amber-400"
                     : "border-green-900 text-green-900"
                 }`}
               >
@@ -40,17 +46,19 @@ export default function MissionProgress({ completedStages, currentStage }) {
                   isCompleted
                     ? "text-green-600 line-through"
                     : isCurrent
-                    ? "text-amber-400"
+                    ? isGupta
+                      ? "text-green-400"
+                      : "text-amber-400"
                     : "text-green-900"
                 }
               >
-                {isLocked ? "████████" : stage.label}
+                {isLocked ? "████████████" : stage[player?.id]?.missionTitle || stage.label}
               </span>
               {isCurrent && (
                 <motion.span
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ repeat: Infinity, duration: 1 }}
-                  className="text-amber-400 ml-auto"
+                  className={`ml-auto ${isGupta ? "text-green-400" : "text-amber-400"}`}
                 >
                   ◄
                 </motion.span>

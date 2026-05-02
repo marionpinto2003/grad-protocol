@@ -1,32 +1,46 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadState, completeStage, resetState } from "./utils/storage";
-import { STAGES } from "./config/locations";
+import { STAGES, PLAYERS } from "./config/locations";
 import StageView from "./components/StageView";
 import MissionProgress from "./components/MissionProgress";
 
 export default function App() {
-  const [appState, setAppState] = useState(() => loadState());
+  const [player, setPlayer] = useState(null);
+  const [appState, setAppState] = useState(null);
   const [showProgress, setShowProgress] = useState(false);
   const [finalScreen, setFinalScreen] = useState(false);
 
   useEffect(() => {
+    if (!player) return;
+    const state = loadState(player.id);
+    setAppState(state);
+  }, [player]);
+
+  useEffect(() => {
+    if (!appState) return;
     if (appState.completedStages.length === STAGES.length) {
       setFinalScreen(true);
     }
-  }, [appState.completedStages]);
+  }, [appState]);
 
   const handleStageComplete = useCallback(async (stageIndex) => {
-    const newState = completeStage(appState, stageIndex);
+    const newState = completeStage(appState, stageIndex, player.id);
     setAppState(newState);
-  }, [appState]);
+  }, [appState, player]);
 
   const handleReset = () => {
     if (window.confirm("RESET PROTOCOL? All progress will be lost.")) {
-      setAppState(resetState());
+      setAppState(resetState(player.id));
       setFinalScreen(false);
     }
   };
+
+  if (!player) {
+    return <PlayerSelect onSelect={setPlayer} />;
+  }
+
+  if (!appState) return null;
 
   const currentStage = STAGES[appState.currentStage];
 
@@ -46,12 +60,12 @@ export default function App() {
             <motion.span
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
-              className="text-green-500 text-xs"
+              className={`text-xs ${player.id === "gupta" ? "text-green-500" : "text-amber-500"}`}
             >
               ●
             </motion.span>
-            <span className="text-green-400 text-sm font-bold tracking-widest uppercase">
-              THE GRAD PROTOCOL
+            <span className={`text-sm font-bold tracking-widest uppercase ${player.id === "gupta" ? "text-green-400" : "text-amber-400"}`}>
+              OPERATIVE {player.codename}
             </span>
           </div>
           <p className="text-green-800 text-xs mt-0.5">
@@ -63,13 +77,19 @@ export default function App() {
             onClick={() => setShowProgress(!showProgress)}
             className="border border-green-900 text-green-700 text-xs px-3 py-1.5 rounded hover:border-green-700 hover:text-green-500 transition"
           >
-            {showProgress ? "[ HIDE MAP ]" : "[ MISSION MAP ]"}
+            {showProgress ? "[ HIDE ]" : "[ MAP ]"}
+          </button>
+          <button
+            onClick={() => setPlayer(null)}
+            className="border border-green-900 text-green-700 text-xs px-2 py-1.5 rounded hover:border-green-700 hover:text-green-500 transition"
+          >
+            ⇄
           </button>
           <button
             onClick={handleReset}
             className="border border-red-900 text-red-800 text-xs px-2 py-1.5 rounded hover:border-red-700 hover:text-red-600 transition"
           >
-            RESET
+            ↺
           </button>
         </div>
       </header>
@@ -86,13 +106,14 @@ export default function App() {
               <MissionProgress
                 completedStages={appState.completedStages}
                 currentStage={appState.currentStage}
+                player={player}
               />
             </motion.div>
           )}
         </AnimatePresence>
 
         {finalScreen ? (
-          <FinalScreen startedAt={appState.startedAt} />
+          <FinalScreen player={player} startedAt={appState.startedAt} />
         ) : (
           <AnimatePresence mode="wait">
             <motion.div
@@ -105,6 +126,7 @@ export default function App() {
             >
               <StageView
                 stage={currentStage}
+                player={player}
                 onComplete={handleStageComplete}
               />
             </motion.div>
@@ -112,14 +134,73 @@ export default function App() {
         )}
 
         <p className="text-green-900 text-xs text-center tracking-widest pb-4">
-          GRAD_PROTOCOL v1.0 · EYES ONLY
+          GRAD_PROTOCOL v2.0 · EYES ONLY
         </p>
       </main>
     </div>
   );
 }
 
-function FinalScreen({ startedAt }) {
+function PlayerSelect({ onSelect }) {
+  return (
+    <div className="min-h-screen bg-[#030a03] flex flex-col items-center justify-center px-6 font-mono">
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, rgba(0,255,100,0.15) 0px, transparent 1px, transparent 2px)",
+        }}
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-sm space-y-8 relative z-10"
+      >
+        <div className="text-center space-y-2">
+          <motion.p
+            animate={{ opacity: [1, 0.3, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="text-green-600 text-xs tracking-widest uppercase"
+          >
+            Initialising...
+          </motion.p>
+          <h1 className="text-green-400 text-2xl font-bold tracking-widest uppercase">
+            The Grad Protocol
+          </h1>
+          <p className="text-green-700 text-xs tracking-wider">
+            Identify yourself, Operative.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          {Object.values(PLAYERS).map((p) => (
+            <motion.button
+              key={p.id}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => onSelect(p)}
+              className={`w-full border rounded-lg px-6 py-4 text-left transition space-y-1 ${
+                p.id === "gupta"
+                  ? "border-green-800 hover:border-green-500 hover:bg-green-950/30"
+                  : "border-amber-900 hover:border-amber-500 hover:bg-amber-950/20"
+              }`}
+            >
+              <p className={`text-sm font-bold tracking-widest ${p.id === "gupta" ? "text-green-400" : "text-amber-400"}`}>
+                OPERATIVE {p.codename}
+              </p>
+              <p className="text-green-700 text-xs">{p.fullName}</p>
+            </motion.button>
+          ))}
+        </div>
+
+        <p className="text-green-900 text-xs text-center">
+          Select your identity to begin.
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
+function FinalScreen({ player, startedAt }) {
   const elapsed = startedAt
     ? Math.round((Date.now() - startedAt) / 60000)
     : null;
@@ -143,7 +224,7 @@ function FinalScreen({ startedAt }) {
         </p>
         <h1 className="text-white text-2xl font-bold">Mission Accomplished</h1>
         <p className="text-green-500 text-sm mt-2">
-          All 8 stages cleared. You have graduated, Operative.
+          All 9 stages cleared, Operative {player.codename}.
         </p>
       </div>
       {elapsed && (
@@ -156,6 +237,15 @@ function FinalScreen({ startedAt }) {
           </p>
         </div>
       )}
+      <div className="border border-amber-600 rounded-lg p-4 bg-amber-950/20 space-y-2">
+        <p className="text-amber-400 text-xs tracking-widest uppercase">
+          ██ CLASSIFIED REWARD ██
+        </p>
+        <p className="text-white text-lg font-bold">2 × Thorpe Park Tickets</p>
+        <p className="text-amber-300 text-xs">
+          Redeemable immediately. Marion's orders.
+        </p>
+      </div>
     </motion.div>
   );
 }
