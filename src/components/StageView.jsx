@@ -4,7 +4,6 @@ import TerminalTyper from "./TerminalTyper";
 import GpsHud from "./GpsHud";
 import VoucherDisplay from "./VoucherDisplay";
 import MugshotGenerator from "./MugshotGenerator";
-import MockStripePayment from "./MockStripePayment";
 import ClueReveal from "./ClueReveal";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
 import { syncAndWait } from "../utils/sync";
@@ -51,7 +50,9 @@ export default function StageView({ stage, player, onComplete }) {
 
   const handleTypingDone = () => setPhase("scanning");
 
-  const markTaskComplete = useCallback(async () => {
+  const markTaskComplete = useCallback(async (photo = null) => {
+    if (photo) setCapturedPhoto(photo);
+
     if (!playerData.clue) {
       setPhase("complete");
       onComplete(stage.index);
@@ -164,58 +165,24 @@ export default function StageView({ stage, player, onComplete }) {
                 </div>
 
                 {stage.validation === "photo" && (
-                  <PhotoCapture
-                    onComplete={(photo) => {
-                      setCapturedPhoto(photo);
-                      markTaskComplete();
-                    }}
-                  />
-                )}
-
-                {stage.validation === "voucher" && (
-                  <MockStripePayment
-                    amount="£0.00"
-                    merchant={stage.label}
-                    onConfirm={() => setPhase("voucher")}
-                  />
+                  <PhotoCapture onComplete={(photo) => markTaskComplete(photo)} />
                 )}
 
                 {stage.validation === "arrest" && player.id === "gohil" && (
-                  <MugshotGenerator
-                    onComplete={(photo) => {
-                      setCapturedPhoto(photo);
-                      markTaskComplete();
-                    }}
-                  />
+                  <MugshotGenerator onComplete={(photo) => markTaskComplete(photo)} />
                 )}
 
                 {stage.validation === "arrest" && player.id === "gupta" && (
-                  <BailAuth onComplete={markTaskComplete} stage={stage} />
+                  <BailAuth onComplete={() => markTaskComplete()} stage={stage} />
                 )}
 
                 {stage.validation === "passcode" && (
                   <PasscodeEntry
                     correctCode={stage.passcode}
-                    onComplete={markTaskComplete}
+                    onComplete={() => markTaskComplete()}
                   />
                 )}
               </motion.div>
-            )}
-
-            {phase === "voucher" && (
-              <div className="space-y-3">
-                <VoucherDisplay
-                  title={playerData.voucherTitle}
-                  code={stage.voucherCode}
-                  stageLabel={stage.label}
-                />
-                <button
-                  onClick={markTaskComplete}
-                  className="w-full border border-green-500 text-green-400 py-3 rounded hover:bg-green-950/30 transition text-sm tracking-wider"
-                >
-                  [ VOUCHER USED — PROCEED ]
-                </button>
-              </div>
             )}
 
             {phase === "clue" && (

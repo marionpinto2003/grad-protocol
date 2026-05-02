@@ -55,7 +55,7 @@ export const STAGES = [
     lat: 51.5560,
     lng: -0.2796,
     radius: 50,
-    validation: "voucher",
+    validation: "photo",
     unlockType: "wordSplit",
     unlockWord: "NAVRATRI",
     voucherCode: "GRAD-CHIPS-2025",
