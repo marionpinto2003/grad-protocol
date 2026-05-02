@@ -17,11 +17,6 @@ async function getDb() {
   }
 }
 
-/**
- * Marks this player as done for a stage, then waits for the other player.
- * In DEV_MODE, resolves immediately after a short delay.
- * Returns a cleanup function to unsubscribe.
- */
 export async function syncAndWait(stageId, playerId, onBothReady) {
   if (DEV_MODE) {
     const t = setTimeout(() => onBothReady(), 800);

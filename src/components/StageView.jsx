@@ -5,6 +5,7 @@ import GpsHud from "./GpsHud";
 import VoucherDisplay from "./VoucherDisplay";
 import MugshotGenerator from "./MugshotGenerator";
 import MockStripePayment from "./MockStripePayment";
+import ClueReveal from "./ClueReveal";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
 import { syncAndWait } from "../utils/sync";
 
@@ -14,7 +15,7 @@ export default function StageView({ stage, player, onComplete }) {
   const [wordInput, setWordInput] = useState("");
   const [wordError, setWordError] = useState(false);
   const [waitingForPartner, setWaitingForPartner] = useState(false);
-  const [myHalfWord, setMyHalfWord] = useState(null);
+  const [capturedPhoto, setCapturedPhoto] = useState(null);
   const intervalRef = useRef(null);
   const cleanupSyncRef = useRef(null);
 
@@ -57,15 +58,11 @@ export default function StageView({ stage, player, onComplete }) {
       return;
     }
 
-    if (stage.unlockType === "wordSplit") {
-      setMyHalfWord(playerData.wordHalf);
-    }
-
     setWaitingForPartner(true);
+    setPhase("clue");
 
     const cleanup = await syncAndWait(stage.id, player.id, () => {
       setWaitingForPartner(false);
-      setPhase("clue");
     });
 
     cleanupSyncRef.current = cleanup;
@@ -119,26 +116,30 @@ export default function StageView({ stage, player, onComplete }) {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-4"
           >
-            <div className="bg-black/20 border border-green-900/50 rounded p-3">
-              <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
-                Mission Brief
-              </p>
-              <p className="text-green-300 text-sm leading-relaxed">
-                {playerData.missionBrief}
-              </p>
-            </div>
+            {phase !== "clue" && phase !== "wordUnlock" && (
+              <>
+                <div className="bg-black/20 border border-green-900/50 rounded p-3">
+                  <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
+                    Mission Brief
+                  </p>
+                  <p className="text-green-300 text-sm leading-relaxed">
+                    {playerData.missionBrief}
+                  </p>
+                </div>
 
-            <GpsHud
-              distance={gpsData.distance}
-              accuracy={gpsData.accuracy}
-              inside={gpsData.inside || phase !== "scanning"}
-              scanning={phase === "scanning" && !gpsData.distance && !gpsData.error}
-            />
+                <GpsHud
+                  distance={gpsData.distance}
+                  accuracy={gpsData.accuracy}
+                  inside={gpsData.inside || phase !== "scanning"}
+                  scanning={phase === "scanning" && !gpsData.distance && !gpsData.error}
+                />
 
-            {gpsData.error && (
-              <p className="text-red-500 text-xs">
-                GPS unavailable. Check location permissions.
-              </p>
+                {gpsData.error && (
+                  <p className="text-red-500 text-xs">
+                    GPS unavailable. Check location permissions.
+                  </p>
+                )}
+              </>
             )}
 
             {phase === "unlocked" && (
@@ -163,9 +164,12 @@ export default function StageView({ stage, player, onComplete }) {
                 </div>
 
                 {stage.validation === "photo" && (
-                  <PhotoCapture onComplete={(photo) => {
-                    markTaskComplete();
-                  }} />
+                  <PhotoCapture
+                    onComplete={(photo) => {
+                      setCapturedPhoto(photo);
+                      markTaskComplete();
+                    }}
+                  />
                 )}
 
                 {stage.validation === "voucher" && (
@@ -177,7 +181,12 @@ export default function StageView({ stage, player, onComplete }) {
                 )}
 
                 {stage.validation === "arrest" && player.id === "gohil" && (
-                  <MugshotGenerator onComplete={markTaskComplete} />
+                  <MugshotGenerator
+                    onComplete={(photo) => {
+                      setCapturedPhoto(photo);
+                      markTaskComplete();
+                    }}
+                  />
                 )}
 
                 {stage.validation === "arrest" && player.id === "gupta" && (
@@ -209,12 +218,12 @@ export default function StageView({ stage, player, onComplete }) {
               </div>
             )}
 
-            {(phase === "clue" || waitingForPartner) && (
+            {phase === "clue" && (
               <ClueReveal
                 clue={playerData.clue}
-                wordHalf={myHalfWord}
                 unlockType={stage.unlockType}
                 waitingForPartner={waitingForPartner}
+                capturedPhoto={capturedPhoto}
                 onProceedToUnlock={() => setPhase("wordUnlock")}
                 onProceedToComplete={() => {
                   setPhase("complete");
@@ -259,88 +268,6 @@ export default function StageView({ stage, player, onComplete }) {
   );
 }
 
-function ClueReveal({ clue, wordHalf, unlockType, waitingForPartner, onProceedToUnlock, onProceedToComplete, player }) {
-  const [revealed, setRevealed] = useState(false);
-  const isGupta = player?.id === "gupta";
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-      {waitingForPartner ? (
-        <div className="border border-amber-800 rounded p-3 bg-amber-950/20 flex items-center gap-3">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-            className="w-4 h-4 border border-amber-500 border-t-transparent rounded-full flex-shrink-0"
-          />
-          <span className="text-amber-400 text-xs">
-            Waiting for your partner to complete their task...
-          </span>
-        </div>
-      ) : (
-        <>
-          <div className="border border-green-600 rounded px-3 py-2 bg-green-950/20 text-center">
-            <p className="text-green-400 text-xs tracking-widest uppercase">
-              ✓ Both Operatives Ready — Clue Unlocked
-            </p>
-          </div>
-
-          {!revealed ? (
-            <button
-              onClick={() => setRevealed(true)}
-              className="w-full border border-amber-500 text-amber-400 py-3 rounded hover:bg-amber-950/30 transition text-sm tracking-wider"
-            >
-              [ REVEAL CLUE ]
-            </button>
-          ) : (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
-              <div className="border border-amber-700 rounded p-4 bg-amber-950/10">
-                <p className="text-amber-300 text-sm leading-relaxed italic">
-                  "{clue}"
-                </p>
-              </div>
-
-              {wordHalf && (
-                <div className="border border-green-800 rounded p-3 bg-green-950/20 text-center">
-                  <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
-                    Your Half of the Key
-                  </p>
-                  <p className={`text-2xl font-bold tracking-widest ${isGupta ? "text-green-400" : "text-amber-400"}`}>
-                    {wordHalf}
-                  </p>
-                </div>
-              )}
-
-              {unlockType === "wordSplit" ? (
-                <button
-                  onClick={onProceedToUnlock}
-                  className={`w-full border py-3 rounded transition text-sm tracking-wider ${
-                    isGupta
-                      ? "border-green-500 text-green-400 hover:bg-green-950/30"
-                      : "border-amber-500 text-amber-400 hover:bg-amber-950/30"
-                  }`}
-                >
-                  [ ENTER COMBINED WORD ]
-                </button>
-              ) : (
-                <button
-                  onClick={onProceedToComplete}
-                  className={`w-full border py-3 rounded transition text-sm tracking-wider ${
-                    isGupta
-                      ? "border-green-500 text-green-400 hover:bg-green-950/30"
-                      : "border-amber-500 text-amber-400 hover:bg-amber-950/30"
-                  }`}
-                >
-                  [ UNDERSTOOD — MOVE ON ]
-                </button>
-              )}
-            </motion.div>
-          )}
-        </>
-      )}
-    </motion.div>
-  );
-}
-
 function WordUnlock({ wordInput, setWordInput, wordError, onSubmit, player }) {
   const isGupta = player?.id === "gupta";
   return (
@@ -348,7 +275,7 @@ function WordUnlock({ wordInput, setWordInput, wordError, onSubmit, player }) {
       <div className="border border-green-900/50 rounded p-3 bg-black/20">
         <p className="text-green-600 text-xs uppercase tracking-widest mb-1">Combined Key Required</p>
         <p className="text-green-700 text-xs">
-          Compare your half with your partner's. Enter the combined word to unlock the next stage.
+          Compare your clue with your partner's. Work out the combined word and enter it below.
         </p>
       </div>
       <input
@@ -366,7 +293,7 @@ function WordUnlock({ wordInput, setWordInput, wordError, onSubmit, player }) {
         }`}
       />
       {wordError && (
-        <p className="text-red-400 text-xs">INCORRECT — Check your halves and try again.</p>
+        <p className="text-red-400 text-xs">INCORRECT — Try again.</p>
       )}
       <button
         onClick={onSubmit}
