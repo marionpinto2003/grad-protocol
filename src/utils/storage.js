@@ -29,7 +29,7 @@ export function completeStage(state, stageIndex, playerId) {
   const completedStages = Array.from(
     new Set([...state.completedStages, stageIndex])
   );
-  const nextStage = Math.min(stageIndex + 1, 8);
+  const nextStage = Math.min(stageIndex + 1, 7);
   const newState = {
     ...state,
     currentStage: nextStage,
