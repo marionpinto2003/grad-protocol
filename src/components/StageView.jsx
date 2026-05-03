@@ -6,6 +6,14 @@ import VoucherDisplay from "./VoucherDisplay";
 import MugshotGenerator from "./MugshotGenerator";
 import ClueReveal from "./ClueReveal";
 import PhotoCapture from "./PhotoCapture";
+import CaesarCipher from "./puzzles/CaesarCipher";
+import GuinnessFill from "./puzzles/GuinnessFill";
+import PeanutThrow from "./puzzles/PeanutThrow";
+import LimescaleScrub from "./puzzles/LimescaleScrub";
+import FindJai from "./puzzles/FindJai";
+import HiddenWord from "./puzzles/HiddenWord";
+import PingPong from "./puzzles/PingPong";
+import Trivia from "./puzzles/Trivia";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
 import { syncAndWait } from "../utils/sync";
 import { savePhoto } from "../utils/storage";
@@ -17,6 +25,7 @@ export default function StageView({ stage, player, onComplete }) {
   const [wordError, setWordError] = useState(false);
   const [waitingForPartner, setWaitingForPartner] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState(null);
+  const [puzzleDone, setPuzzleDone] = useState(false);
   const intervalRef = useRef(null);
   const cleanupSyncRef = useRef(null);
 
@@ -53,8 +62,10 @@ export default function StageView({ stage, player, onComplete }) {
   const handleTypingDone = () => setPhase("scanning");
 
   const markTaskComplete = useCallback(async (photo = null) => {
-    if (photo) savePhoto(player.id, stage.id, photo);
-    if (photo) setCapturedPhoto(photo);
+    if (photo) {
+      setCapturedPhoto(photo);
+      savePhoto(player.id, stage.id, photo);
+    }
 
     if (!playerData.clue) {
       setPhase("complete");
@@ -82,6 +93,25 @@ export default function StageView({ stage, player, onComplete }) {
       setTimeout(() => setWordError(false), 1500);
     }
   };
+
+  // Determine which puzzle to show for this stage + player
+  const getPuzzle = () => {
+    const id = stage.id;
+    const pid = player.id;
+
+    if (id === "temple") return <CaesarCipher onComplete={() => setPuzzleDone(true)} />;
+    if (id === "spoons") return <GuinnessFill onComplete={() => setPuzzleDone(true)} />;
+    if (id === "booker" && pid === "gupta") return <PeanutThrow onComplete={() => setPuzzleDone(true)} />;
+    if (id === "booker" && pid === "gohil") return <LimescaleScrub onComplete={() => setPuzzleDone(true)} />;
+    if (id === "police" && pid === "gupta") return <FindJai onComplete={() => setPuzzleDone(true)} />;
+    if (id === "isleworth") return <HiddenWord onComplete={() => setPuzzleDone(true)} />;
+    if (id === "raul") return <PingPong onComplete={() => setPuzzleDone(true)} />;
+    if (id === "richmond") return <Trivia player={player} onComplete={() => setPuzzleDone(true)} />;
+    return null;
+  };
+
+  const hasPuzzle = getPuzzle() !== null;
+  const puzzle = getPuzzle();
 
   return (
     <div className="space-y-4 font-mono">
@@ -167,23 +197,38 @@ export default function StageView({ stage, player, onComplete }) {
                   </p>
                 </div>
 
-                {stage.validation === "photo" && (
-                  <PhotoCapture onComplete={(photo) => markTaskComplete(photo)} />
+                {/* Puzzle first if stage has one */}
+                {hasPuzzle && !puzzleDone && (
+                  <div className="border border-amber-900/50 rounded p-4 bg-amber-950/10">
+                    <p className="text-amber-600 text-xs uppercase tracking-widest mb-3">
+                      Complete the challenge first
+                    </p>
+                    {puzzle}
+                  </div>
                 )}
 
-                {stage.validation === "arrest" && player.id === "gohil" && (
-                  <MugshotGenerator onComplete={(photo) => markTaskComplete(photo)} />
-                )}
+                {/* Main validation — only show after puzzle is done */}
+                {(!hasPuzzle || puzzleDone) && (
+                  <>
+                    {stage.validation === "photo" && (
+                      <PhotoCapture onComplete={(photo) => markTaskComplete(photo)} />
+                    )}
 
-                {stage.validation === "arrest" && player.id === "gupta" && (
-                  <BailAuth onComplete={() => markTaskComplete()} stage={stage} />
-                )}
+                    {stage.validation === "arrest" && player.id === "gohil" && (
+                      <MugshotGenerator onComplete={(photo) => markTaskComplete(photo)} />
+                    )}
 
-                {stage.validation === "passcode" && (
-                  <PasscodeEntry
-                    correctCode={stage.passcode}
-                    onComplete={() => markTaskComplete()}
-                  />
+                    {stage.validation === "arrest" && player.id === "gupta" && (
+                      <BailAuth onComplete={() => markTaskComplete()} stage={stage} />
+                    )}
+
+                    {stage.validation === "passcode" && (
+                      <PasscodeEntry
+                        correctCode={stage.passcode}
+                        onComplete={() => markTaskComplete()}
+                      />
+                    )}
+                  </>
                 )}
               </motion.div>
             )}
@@ -369,4 +414,3 @@ function PasscodeEntry({ correctCode, onComplete }) {
     </div>
   );
 }
-
