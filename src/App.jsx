@@ -4,6 +4,7 @@ import { loadState, completeStage, resetState } from "./utils/storage";
 import { STAGES, PLAYERS } from "./config/locations";
 import StageView from "./components/StageView";
 import MissionProgress from "./components/MissionProgress";
+import PhotoGallery from "./components/PhotoGallery";
 
 export default function App() {
   const [player, setPlayer] = useState(null);
@@ -245,7 +246,8 @@ function FinalScreen({ player, startedAt }) {
         <p className="text-amber-300 text-xs">
           Redeemable immediately. Marion's orders.
         </p>
-      </div>
+        </div>
+      <PhotoGallery player={player} />
     </motion.div>
   );
 }

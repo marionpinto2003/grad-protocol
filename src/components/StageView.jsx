@@ -8,6 +8,7 @@ import ClueReveal from "./ClueReveal";
 import PhotoCapture from "./PhotoCapture";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
 import { syncAndWait } from "../utils/sync";
+import { savePhoto } from "../utils/storage";
 
 export default function StageView({ stage, player, onComplete }) {
   const [phase, setPhase] = useState("booting");
@@ -52,6 +53,7 @@ export default function StageView({ stage, player, onComplete }) {
   const handleTypingDone = () => setPhase("scanning");
 
   const markTaskComplete = useCallback(async (photo = null) => {
+    if (photo) savePhoto(player.id, stage.id, photo);
     if (photo) setCapturedPhoto(photo);
 
     if (!playerData.clue) {
