@@ -96,8 +96,8 @@ export default function StageView({ stage, player, onComplete }) {
 
   // Determine which puzzle to show for this stage + player
   const getPuzzle = () => {
-    const id = stage.id;
-    const pid = player.id;
+    const id = stage["id"];
+    const pid = player["id"];
 
     if (id === "temple") return <CaesarCipher onComplete={() => setPuzzleDone(true)} />;
     if (id === "spoons") return <GuinnessFill onComplete={() => setPuzzleDone(true)} />;
@@ -110,7 +110,7 @@ export default function StageView({ stage, player, onComplete }) {
     return null;
   };
 
-  const hasPuzzle = getPuzzle() !== null;
+    const hasPuzzle = getPuzzle() !== null;
   const puzzle = getPuzzle();
 
   return (
