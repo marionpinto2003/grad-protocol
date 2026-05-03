@@ -10,7 +10,7 @@ export default function PhotoCapture({ onComplete }) {
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
+        video: { facingMode: "user" },
       });
       streamRef.current = stream;
       setCameraActive(true);
