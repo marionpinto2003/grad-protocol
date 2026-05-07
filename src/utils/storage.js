@@ -43,3 +43,19 @@ export function resetState(playerId) {
   localStorage.removeItem(STORAGE_KEY(playerId));
   return { ...DEFAULT_STATE, startedAt: Date.now() };
 }
+
+export function savePhoto(playerId, stageId, photoData) {
+  try {
+    localStorage.setItem(`grad_photo_${playerId}_${stageId}`, photoData);
+  } catch (e) {
+    console.warn("Could not save photo:", e);
+  }
+}
+
+export function getPhoto(playerId, stageId) {
+  try {
+    return localStorage.getItem(`grad_photo_${playerId}_${stageId}`);
+  } catch {
+    return null;
+  }
+}
