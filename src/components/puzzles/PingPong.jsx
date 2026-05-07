@@ -72,29 +72,29 @@ export default function PingPong({ onComplete }) {
       s.ballDY = Math.abs(s.ballDY) + 0.2;
     }
 
-    // Score — player misses (top)
+    // Score — ball passes CPU paddle (top) → player scores
     if (s.ballY < 0) {
+      s.score.player += 1;
+      if (s.score.player >= 3) {
+        setPhase("won");
+        setTimeout(() => onComplete(), 1200);
+        setScore({ ...s.score });
+        return;
+      }
+      setScore({ ...s.score });
+      resetBall("player");
+    }
+
+    // Score — ball passes player paddle (bottom) → cpu scores
+    if (s.ballY > HEIGHT) {
       s.score.cpu += 1;
       if (s.score.cpu >= 3) {
-        setPhase("lost");
+        setPhase("lost"); // cpu wins
         setScore({ ...s.score });
         return;
       }
       setScore({ ...s.score });
       resetBall("cpu");
-    }
-
-    // Score — cpu misses (bottom)
-    if (s.ballY > HEIGHT) {
-      s.score.player += 1;
-      if (s.score.player >= 3) {
-        setPhase("won");
-        setScore({ ...s.score });
-        setTimeout(() => onComplete(), 1200);
-        return;
-      }
-      setScore({ ...s.score });
-      resetBall("player");
     }
 
     // Sync state to React

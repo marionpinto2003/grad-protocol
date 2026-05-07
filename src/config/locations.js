@@ -206,7 +206,7 @@ export const STAGES = [
       missionBrief: "GOHIL has been arrested. Again. Jai did a runner to India and left him holding the confusion at Sainsbury's. You got the call. You went. No hesitation — same as always. Authorise his release.",
       task: "Authorise bail using the code on your screen. Show it to GOHIL.",
       wordHalf: "WINTER",
-      clue: "This is the holy land of sleepovers, where the Paneer Butter Masala was legendary and the PS5 never got a rest. Your half of the password is where the true logic of a program lives — and it's also what you've been doing all day. Four letters. Heading ____ home.",
+      clue: "This is the holy land of sleepovers, where the Paneer Butter Masala was legendary and the PS5 never got a rest. Your half of the password is where the true logic of a program lives — and it's also what you've been doing all day. Four letters. Heading ____ home. The bail code? 230425 — that's 23rd April 2025, the day Marion first properly spoke to both of you.",
     },
     gohil: {
       missionTitle: "The Jailbreak",
@@ -268,7 +268,7 @@ export const STAGES = [
     gupta: {
       missionTitle: "The Legend of Building 12",
       terminalLines: [
-        "Brunel University — campus online...",
+        "Richmond American University London — campus online...",
         "RAUL Building 12 — located...",
         "Four years. This is it.",
       ],
@@ -280,12 +280,12 @@ export const STAGES = [
     gohil: {
       missionTitle: "The Legend of Building 12",
       terminalLines: [
-        "RAUL Building 12 — Brunel...",
+        "RAUL Building 12 — Richmond American University London...",
         "Four years of BCC Comp Sci...",
         "David still owes you that award.",
       ],
       missionBrief: "There were classrooms in this building that saw more action than the lectures ever did. There was also a cardboard box, a case of Monster, and a security guard who had questions. President of Quant. David never gave you the award. Everyone knows.",
-      task: "Find the table tennis table. Win a game. Photo of the win. Hold a fake award — claim what David never gave you.",
+      task: "Find one of the classrooms. You know what you did in them. Complete the classroom challenge — then take a photo. Hold a fake award — claim what David never gave you.",
       wordHalf: "VEER",
       clue: "The protocol ends here. Your half of the final password is the first name of the pilot played by SRK in our favourite cross-border romance. He waited 22 years for his freedom. You only waited 4 for this degree. Look toward the horizon where your next chapter begins.",
     },

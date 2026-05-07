@@ -13,6 +13,7 @@ import LimescaleScrub from "./puzzles/LimescaleScrub";
 import FindJai from "./puzzles/FindJai";
 import HiddenWord from "./puzzles/HiddenWord";
 import PingPong from "./puzzles/PingPong";
+import MakeOut from "./puzzles/MakeOut";
 import Trivia from "./puzzles/Trivia";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
 import { syncAndWait } from "../utils/sync";
@@ -30,7 +31,7 @@ export default function StageView({ stage, player, onComplete }) {
   const intervalRef = useRef(null);
   const cleanupSyncRef = useRef(null);
 
-  const playerData = stage[player.id];
+  const playerData = stage[player["id"]];
 
   const scanPosition = useCallback(async () => {
     try {
@@ -65,7 +66,7 @@ export default function StageView({ stage, player, onComplete }) {
   const markTaskComplete = useCallback(async (photo = null) => {
     if (photo) {
       setCapturedPhoto(photo);
-      savePhoto(player.id, stage.id, photo);
+      savePhoto(player["id"], stage["id"], photo);
     }
 
     if (!playerData.clue) {
@@ -77,7 +78,7 @@ export default function StageView({ stage, player, onComplete }) {
     setWaitingForPartner(true);
     setPhase("clue");
 
-    const cleanup = await syncAndWait(stage.id, player.id, () => {
+    const cleanup = await syncAndWait(stage["id"], player["id"], () => {
       setWaitingForPartner(false);
     });
 
@@ -106,7 +107,8 @@ export default function StageView({ stage, player, onComplete }) {
     if (id === "booker" && pid === "gohil") return <LimescaleScrub onComplete={() => setPuzzleDone(true)} />;
     if (id === "police" && pid === "gupta") return <FindJai onComplete={() => setPuzzleDone(true)} />;
     if (id === "isleworth") return <HiddenWord onComplete={() => setPuzzleDone(true)} />;
-    if (id === "raul") return <PingPong onComplete={() => setPuzzleDone(true)} />;
+    if (id === "raul" && pid === "gupta") return <PingPong onComplete={() => setPuzzleDone(true)} />;
+    if (id === "raul" && pid === "gohil") return <MakeOut onComplete={() => setPuzzleDone(true)} />;
     if (id === "richmond") return <Trivia player={player} onComplete={() => setPuzzleDone(true)} />;
     return null;
   };
@@ -120,7 +122,7 @@ export default function StageView({ stage, player, onComplete }) {
         <p className="text-green-600 text-xs tracking-widest uppercase mb-1">
           {stage.codename}
         </p>
-        <h2 className={`text-xl font-bold ${player.id === "gupta" ? "text-green-400" : "text-amber-400"}`}>
+        <h2 className={`text-xl font-bold ${player["id"] === "gupta" ? "text-green-400" : "text-amber-400"}`}>
           {stage.label}
         </h2>
         {playerData.missionTitle && (
@@ -161,7 +163,7 @@ export default function StageView({ stage, player, onComplete }) {
       )}
 
       <AnimatePresence>
-        {phase !== "booting" && phase !== "complete" && (
+        {phase !== "booting" && phase !== "prePuzzle" && phase !== "complete" && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
