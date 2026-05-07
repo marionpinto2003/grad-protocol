@@ -11,7 +11,7 @@ import GuinnessFill from "./puzzles/GuinnessFill";
 import PeanutThrow from "./puzzles/PeanutThrow";
 import LimescaleScrub from "./puzzles/LimescaleScrub";
 import FindJai from "./puzzles/FindJai";
-import HiddenWord from "./puzzles/HiddenWord";
+import QuoteMatch from "./puzzles/QuoteMatch";
 import PingPong from "./puzzles/PingPong";
 import MakeOut from "./puzzles/MakeOut";
 import Trivia from "./puzzles/Trivia";
@@ -101,12 +101,11 @@ export default function StageView({ stage, player, onComplete }) {
     const id = stage["id"];
     const pid = player["id"];
 
-    if (id === "wembley") return <CaesarCipher onComplete={() => setPuzzleDone(true)} />;
     if (id === "spoons") return <GuinnessFill onComplete={() => setPuzzleDone(true)} />;
     if (id === "booker" && pid === "gupta") return <PeanutThrow onComplete={() => setPuzzleDone(true)} />;
     if (id === "booker" && pid === "gohil") return <LimescaleScrub onComplete={() => setPuzzleDone(true)} />;
     if (id === "police" && pid === "gupta") return <FindJai onComplete={() => setPuzzleDone(true)} />;
-    if (id === "isleworth") return <HiddenWord onComplete={() => setPuzzleDone(true)} />;
+    if (id === "isleworth") return <QuoteMatch onComplete={() => setPuzzleDone(true)} />;
     if (id === "raul" && pid === "gupta") return <PingPong onComplete={() => setPuzzleDone(true)} />;
     if (id === "raul" && pid === "gohil") return <MakeOut onComplete={() => setPuzzleDone(true)} />;
     if (id === "richmond") return <Trivia player={player} onComplete={() => setPuzzleDone(true)} />;

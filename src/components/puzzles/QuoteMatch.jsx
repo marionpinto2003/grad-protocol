@@ -1,0 +1,176 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const QUOTES = [
+  {
+    quote: "A Lannister always pays his debts.",
+    answer: "Tyrion Lannister",
+    options: ["Tyrion Lannister", "Jethalal Gada", "Cersei Lannister", "Popatlal"],
+  },
+  {
+    quote: "Babita ji... aap toh kamaal karti hain.",
+    answer: "Jethalal Gada",
+    options: ["Jethalal Gada", "Jon Snow", "Taarak Mehta", "Bhide"],
+  },
+  {
+    quote: "Chaos isn't a pit. Chaos is a ladder.",
+    answer: "Littlefinger",
+    options: ["Littlefinger", "Jethalal Gada", "Daya Ben", "Varys"],
+  },
+  {
+    quote: "Ae Daya! Darvaazo tod do!",
+    answer: "Jethalal Gada",
+    options: ["Jethalal Gada", "Ned Stark", "Popatlal", "Daenerys"],
+  },
+  {
+    quote: "The night is dark and full of terrors.",
+    answer: "Melisandre",
+    options: ["Melisandre", "Bapuji", "Cersei Lannister", "Daya Ben"],
+  },
+  {
+    quote: "Mein aur meri tanhaai... aksar yeh baatein karte hain.",
+    answer: "Popatlal",
+    options: ["Popatlal", "Jon Snow", "Jethalal Gada", "Sansa Stark"],
+  },
+  {
+    quote: "Dracarys.",
+    answer: "Daenerys",
+    options: ["Daenerys", "Daya Ben", "Bapuji", "Taarak Mehta"],
+  },
+  {
+    quote: "Nonsense! Bilkul nonsense!",
+    answer: "Bapuji",
+    options: ["Bapuji", "Tyrion Lannister", "Popatlal", "Jon Snow"],
+  },
+];
+
+const PASS_SCORE = 6;
+
+export default function QuoteMatch({ onComplete }) {
+  const [phase, setPhase] = useState("intro");
+  const [current, setCurrent] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [feedback, setFeedback] = useState(null); // "correct" | "wrong"
+
+  const handleAnswer = (option) => {
+    if (feedback) return;
+    setSelected(option);
+    const correct = option === QUOTES[current].answer;
+    setFeedback(correct ? "correct" : "wrong");
+
+    setTimeout(() => {
+      const newScore = correct ? score + 1 : score;
+      setScore(newScore);
+      setFeedback(null);
+      setSelected(null);
+
+      if (current + 1 >= QUOTES.length) {
+        if (newScore >= PASS_SCORE) {
+          setPhase("won");
+          setTimeout(() => onComplete(), 1400);
+        } else {
+          setPhase("lost");
+        }
+      } else {
+        setCurrent(current + 1);
+      }
+    }, 900);
+  };
+
+  const retry = () => {
+    setCurrent(0);
+    setScore(0);
+    setSelected(null);
+    setFeedback(null);
+    setPhase("playing");
+  };
+
+  const q = QUOTES[current];
+
+  return (
+    <div className="space-y-3 font-mono">
+      <div className="text-center space-y-1">
+        <p className="text-amber-400 text-xs uppercase tracking-widest">Quote Protocol</p>
+        <p className="text-amber-700 text-xs">TMKOC or GOT — who said it?</p>
+      </div>
+
+      {phase === "intro" && (
+        <div className="space-y-3">
+          <div className="border border-amber-900/50 rounded p-4 bg-black/30 text-center space-y-2">
+            <p className="text-amber-400 text-sm">Two worlds. Eight quotes.</p>
+            <p className="text-amber-700 text-xs">Gokuldham Society meets Westeros. Match the quote to the character.</p>
+            <p className="text-amber-600 text-xs font-bold">Get {PASS_SCORE}/8 to proceed.</p>
+          </div>
+          <button
+            onClick={() => setPhase("playing")}
+            className="w-full border border-amber-600 text-amber-400 py-3 rounded hover:bg-amber-950/40 transition text-sm tracking-wider"
+          >
+            [ BEGIN ]
+          </button>
+        </div>
+      )}
+
+      {phase === "playing" && (
+        <div className="space-y-3">
+          <div className="flex justify-between text-xs text-amber-800 px-1">
+            <span>{current + 1} / {QUOTES.length}</span>
+            <span>Score: {score}</span>
+          </div>
+
+          <div className="border border-amber-900/50 rounded p-4 bg-black/30 text-center min-h-16 flex items-center justify-center">
+            <p className="text-amber-300 text-sm italic">"{q.quote}"</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {q.options.map((opt) => {
+              let style = "border-amber-900/50 text-amber-700 hover:border-amber-600 hover:text-amber-400";
+              if (selected === opt) {
+                style = feedback === "correct"
+                  ? "border-green-500 text-green-400 bg-green-950/30"
+                  : "border-red-500 text-red-400 bg-red-950/30";
+              } else if (feedback && opt === q.answer) {
+                style = "border-green-500 text-green-400 bg-green-950/30";
+              }
+
+              return (
+                <button
+                  key={opt}
+                  onClick={() => handleAnswer(opt)}
+                  className={`border rounded px-2 py-3 text-xs transition text-left leading-tight ${style}`}
+                >
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {phase === "won" && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center py-6 space-y-2"
+        >
+          <p className="text-4xl">👑</p>
+          <p className="text-amber-400 font-bold text-lg tracking-wider">PROTOCOL CLEARED</p>
+          <p className="text-amber-700 text-xs">{score}/8 — You know your people.</p>
+        </motion.div>
+      )}
+
+      {phase === "lost" && (
+        <div className="text-center py-4 space-y-3">
+          <p className="text-red-400 font-bold">FAILED — {score}/8</p>
+          <p className="text-red-700 text-xs">Bapuji is disappointed. Even Popatlal got more right.</p>
+          <button
+            onClick={retry}
+            className="border border-amber-600 text-amber-400 px-4 py-2 rounded text-xs tracking-wider hover:bg-amber-950/30 transition"
+          >
+            [ TRY AGAIN ]
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
