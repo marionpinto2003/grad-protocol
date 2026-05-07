@@ -230,8 +230,7 @@ export const STAGES = [
     lng: -0.336,
     radius: 80,
     validation: "photo",
-    unlockType: "wordSplit",
-    unlockWord: "BACKEND",
+    unlockType: "descriptive",
     gupta: {
       missionTitle: "The PBM Sanctuary",
       terminalLines: [
@@ -300,7 +299,7 @@ export const STAGES = [
     lng: -0.2947855,
     radius: 60,
     validation: "photo",
-    unlockType: "final",
+    unlockType: "wordSplit",
     unlockWord: "VEERZARA",
     gupta: {
       missionTitle: "The Westward Watch",
