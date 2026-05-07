@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CRIMES = [
@@ -29,15 +29,23 @@ export default function MugshotGenerator({ onComplete }) {
         video: { facingMode: "user" },
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
       setCameraActive(true);
     } catch (e) {
-      alert("Camera access denied. Please allow camera access to continue.");
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        streamRef.current = stream;
+        setCameraActive(true);
+      } catch {
+        alert("Camera access denied. Please allow camera access to continue.");
+      }
     }
   }, []);
+
+  useEffect(() => {
+    if (!cameraActive || !videoRef.current || !streamRef.current) return;
+    videoRef.current.srcObject = streamRef.current;
+    videoRef.current.play().catch(console.warn);
+  }, [cameraActive]);
 
   const capturePhoto = useCallback(() => {
     const video = videoRef.current;
@@ -47,7 +55,6 @@ export default function MugshotGenerator({ onComplete }) {
     canvas.width = video.videoWidth || 400;
     canvas.height = video.videoHeight || 400;
     const ctx = canvas.getContext("2d");
-
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0);
@@ -55,10 +62,8 @@ export default function MugshotGenerator({ onComplete }) {
 
     const data = canvas.toDataURL("image/jpeg", 0.9);
     setPhotoData(data);
-
     streamRef.current?.getTracks().forEach((t) => t.stop());
     setCameraActive(false);
-
     setPhase("processing");
     setTimeout(() => setPhase("result"), 2500);
   }, []);
@@ -71,13 +76,7 @@ export default function MugshotGenerator({ onComplete }) {
     <div className="font-mono space-y-4">
       <AnimatePresence mode="wait">
         {phase === "capture" && (
-          <motion.div
-            key="capture"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="space-y-4"
-          >
+          <motion.div key="capture" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
             <div className="border border-red-500/50 rounded p-3 bg-red-950/20">
               <p className="text-red-400 text-xs tracking-widest uppercase mb-1">
                 METROPOLITAN POLICE — DIGITAL BOOKING SYSTEM
@@ -96,13 +95,17 @@ export default function MugshotGenerator({ onComplete }) {
               </button>
             ) : (
               <div className="space-y-3">
-                <div className="relative border border-green-800 rounded overflow-hidden bg-black aspect-square max-w-xs mx-auto">
+                <div
+                  className="relative border border-green-800 rounded overflow-hidden bg-black"
+                  style={{ minHeight: "250px" }}
+                >
                   <video
                     ref={videoRef}
                     className="w-full h-full object-cover"
-                    style={{ transform: "scaleX(-1)" }}
+                    style={{ transform: "scaleX(-1)", minHeight: "250px" }}
                     playsInline
                     muted
+                    autoPlay
                   />
                   <div className="absolute right-2 top-0 bottom-0 flex flex-col justify-between py-2 pointer-events-none">
                     {[6, 5, 4, 3].map((n) => (
@@ -123,13 +126,7 @@ export default function MugshotGenerator({ onComplete }) {
         )}
 
         {phase === "processing" && (
-          <motion.div
-            key="processing"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="text-center space-y-3 py-8"
-          >
+          <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center space-y-3 py-8">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
@@ -142,34 +139,21 @@ export default function MugshotGenerator({ onComplete }) {
         )}
 
         {phase === "result" && (
-          <motion.div
-            key="result"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-          >
+          <motion.div key="result" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
             <div className="border-2 border-red-600 rounded-lg overflow-hidden bg-black">
               <div className="bg-red-900 px-4 py-2 text-center">
-                <p className="text-white text-xs font-bold tracking-widest uppercase">
-                  Metropolitan Police Service
-                </p>
+                <p className="text-white text-xs font-bold tracking-widest uppercase">Metropolitan Police Service</p>
                 <p className="text-red-200 text-xs">Criminal Booking Record</p>
               </div>
-
               <div className="p-4 flex gap-4">
                 <div className="relative flex-shrink-0 w-28 h-28">
                   {photoData && (
-                    <img
-                      src={photoData}
-                      alt="Mugshot"
-                      className="w-full h-full object-cover rounded"
-                    />
+                    <img src={photoData} alt="Mugshot" className="w-full h-full object-cover rounded" />
                   )}
                   <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                      backgroundImage:
-                        "repeating-linear-gradient(90deg, rgba(0,0,0,0.85) 0px, rgba(0,0,0,0.85) 6px, transparent 6px, transparent 22px)",
+                      backgroundImage: "repeating-linear-gradient(90deg, rgba(0,0,0,0.85) 0px, rgba(0,0,0,0.85) 6px, transparent 6px, transparent 22px)",
                       borderRadius: "4px",
                     }}
                   />
@@ -177,11 +161,10 @@ export default function MugshotGenerator({ onComplete }) {
                     <span className="text-green-400 text-xs font-mono">BOOKED</span>
                   </div>
                 </div>
-
                 <div className="flex-1 space-y-1.5">
                   <div>
                     <p className="text-red-500 text-xs uppercase tracking-wider">Subject</p>
-                    <p className="text-white text-sm font-bold">CLASSIFIED</p>
+                    <p className="text-white text-sm font-bold">GOHIL, R.</p>
                   </div>
                   <div>
                     <p className="text-red-500 text-xs uppercase tracking-wider">Offence</p>
@@ -189,29 +172,23 @@ export default function MugshotGenerator({ onComplete }) {
                   </div>
                   <div>
                     <p className="text-red-500 text-xs uppercase tracking-wider">Booking</p>
-                    <p className="text-green-400 text-xs">
-                      GP-{Date.now().toString(36).toUpperCase()}
-                    </p>
+                    <p className="text-green-400 text-xs">GP-{Date.now().toString(36).toUpperCase()}</p>
                   </div>
                   <div>
                     <p className="text-red-500 text-xs uppercase tracking-wider">Status</p>
-                    <p className="text-amber-400 text-xs animate-pulse">RELEASED ON BAIL</p>
+                    <p className="text-amber-400 text-xs animate-pulse">AWAITING BAIL</p>
                   </div>
                 </div>
               </div>
-
               <div className="border-t border-red-900 px-4 py-2 text-center">
-                <p className="text-red-700 text-xs">
-                  This record is permanently added to the National Database.
-                </p>
+                <p className="text-red-700 text-xs">This record is permanently added to the National Database.</p>
               </div>
             </div>
-
             <button
               onClick={handleConfirm}
               className="w-full border border-green-500 text-green-400 py-3 rounded hover:bg-green-950/30 transition text-sm tracking-wider"
             >
-              [ ACCEPT CHARGES — CONTINUE MISSION ]
+              [ ACCEPT CHARGES — AWAIT BAIL ]
             </button>
           </motion.div>
         )}

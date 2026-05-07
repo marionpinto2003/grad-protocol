@@ -34,7 +34,7 @@ export default function LimescaleScrub({ onComplete }) {
       const next = Math.max(0, prev - reduction);
       if (next === 0) {
         setPhase("done");
-        setTimeout(() => onComplete(), 1200);
+        setTimeout(() => onComplete(), 2500);
       }
       return next;
     });

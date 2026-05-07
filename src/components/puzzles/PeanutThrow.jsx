@@ -14,7 +14,7 @@ export default function PeanutThrow({ onComplete }) {
   useEffect(() => {
     if (score.in >= 3) {
       setDone(true);
-      setTimeout(() => onComplete(), 1200);
+      setTimeout(() => onComplete(), 2500);
     } else if (total === 5 && score.in < 3) {
       setTimeout(() => {
         setScore({ in: 0, out: 0 });

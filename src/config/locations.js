@@ -230,7 +230,8 @@ export const STAGES = [
     lng: -0.336,
     radius: 80,
     validation: "photo",
-    unlockType: "descriptive",
+    unlockType: "wordSplit",
+    unlockWord: "BACKEND",
     gupta: {
       missionTitle: "The PBM Sanctuary",
       terminalLines: [
