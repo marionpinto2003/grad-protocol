@@ -170,7 +170,7 @@ export const STAGES = [
         "Locate the evidence. You know what it is.",
       ],
       missionBrief: "Don't expect anything large here — we know your nutty reputation and the specific size of your member according to the group chat. Head to the warehouse where things are bought in bulk, but the snacks are strictly peanut sized.",
-      task: "Find a bag of peanuts and a bag of green peas. Photograph both. You know why.",
+      task: "Find a bag of peanuts. Photograph yourself next to them. You know why.",
       clue: "A friend was in trouble once. Wrong place, wrong time, someone else's fault entirely. You got the call and you went — no questions, no hesitation. Shepherd's Bush Road. That building on the corner.",
     },
     gohil: {

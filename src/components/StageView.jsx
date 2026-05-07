@@ -19,6 +19,7 @@ import { syncAndWait } from "../utils/sync";
 import { savePhoto } from "../utils/storage";
 
 export default function StageView({ stage, player, onComplete }) {
+  const startsWithPuzzle = stage["id"] === "wembley";
   const [phase, setPhase] = useState("booting");
   const [gpsData, setGpsData] = useState({ inside: false, distance: null, accuracy: null });
   const [wordInput, setWordInput] = useState("");
@@ -59,7 +60,7 @@ export default function StageView({ stage, player, onComplete }) {
     };
   }, []);
 
-  const handleTypingDone = () => setPhase("scanning");
+  const handleTypingDone = () => setPhase(startsWithPuzzle ? "prePuzzle" : "scanning");
 
   const markTaskComplete = useCallback(async (photo = null) => {
     if (photo) {
@@ -143,6 +144,22 @@ export default function StageView({ stage, player, onComplete }) {
         </div>
       )}
 
+
+      {phase === "prePuzzle" && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-3"
+        >
+          <div className="border border-amber-900/50 rounded p-4 bg-amber-950/10">
+            <p className="text-amber-600 text-xs uppercase tracking-widest mb-3">
+              Decrypt to proceed
+            </p>
+            <CaesarCipher onComplete={() => setPhase("scanning")} />
+          </div>
+        </motion.div>
+      )}
+
       <AnimatePresence>
         {phase !== "booting" && phase !== "complete" && (
           <motion.div
@@ -214,11 +231,11 @@ export default function StageView({ stage, player, onComplete }) {
                       <PhotoCapture onComplete={(photo) => markTaskComplete(photo)} />
                     )}
 
-                    {stage.validation === "arrest" && player.id === "gohil" && (
+                    {stage.validation === "arrest" && player["id"] === "gohil" && (
                       <MugshotGenerator onComplete={(photo) => markTaskComplete(photo)} />
                     )}
 
-                    {stage.validation === "arrest" && player.id === "gupta" && (
+                    {stage.validation === "arrest" && player["id"] === "gupta" && (
                       <BailAuth onComplete={() => markTaskComplete()} stage={stage} />
                     )}
 
@@ -325,7 +342,7 @@ function WordUnlock({ wordInput, setWordInput, wordError, onSubmit, player }) {
 }
 
 function BailAuth({ onComplete, stage }) {
-  const [bailCode] = useState(() => Math.floor(100000 + Math.random() * 900000).toString());
+  const bailCode = "230425";
   const [status, setStatus] = useState("waiting");
 
   const authoriseBail = async () => {

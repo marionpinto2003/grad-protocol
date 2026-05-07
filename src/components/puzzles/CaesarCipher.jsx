@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // FUNKY CHIPS jumbled — not simple reverse, letters within each word are scrambled
 // FUNKY -> UNKFY, CHIPS -> HPCIS
-const ENCODED = "UNKFY HPCIS";
+const ENCODED = "PSHC1 KYNF3";
 const ANSWER = "FUNKYCHIPS";
 
 export default function CaesarCipher({ onComplete }) {
