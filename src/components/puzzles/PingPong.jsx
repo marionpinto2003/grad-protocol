@@ -196,12 +196,12 @@ export default function PingPong({ onComplete }) {
                     <>
                       <p className="text-red-400 text-lg font-bold">DEFEATED</p>
                       <p className="text-red-500 text-xs font-bold mt-1">PENALTY: Ask a random girl in the building for her number.</p>
-                      <p className="text-red-700 text-xs">Proof required. Then try again.</p>
+                      <p className="text-red-700 text-xs">Proof required. Then proceed.</p>
                       <button
-                        onClick={startGame}
+                        onClick={() => onComplete()}
                         className="border border-amber-600 text-amber-400 px-4 py-1.5 rounded text-xs tracking-wider hover:bg-amber-950/30 transition mt-2"
                       >
-                        [ TRY AGAIN ]
+                        [ PENALTY ACCEPTED — PROCEED ]
                       </button>
                     </>
                   )}

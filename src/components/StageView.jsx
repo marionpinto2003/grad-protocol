@@ -206,15 +206,6 @@ export default function StageView({ stage, player, onComplete }) {
                   </p>
                 </div>
 
-                <div className="bg-black/20 border border-green-900/50 rounded p-3">
-                  <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
-                    Your Task
-                  </p>
-                  <p className="text-green-300 text-sm leading-relaxed">
-                    {playerData.task}
-                  </p>
-                </div>
-
                 {/* Puzzle first if stage has one */}
                 {hasPuzzle && !puzzleDone && (
                   <div className="border border-amber-900/50 rounded p-4 bg-amber-950/10">
@@ -228,6 +219,14 @@ export default function StageView({ stage, player, onComplete }) {
                 {/* Main validation — only show after puzzle is done */}
                 {(!hasPuzzle || puzzleDone) && (
                   <>
+                  <div className="bg-black/20 border border-green-900/50 rounded p-3">
+                    <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
+                      Your Task
+                    </p>
+                    <p className="text-green-300 text-sm leading-relaxed">
+                      {playerData.task}
+                    </p>
+                  </div>
                     {stage.validation === "photo" && (
                       <PhotoCapture onComplete={(photo) => markTaskComplete(photo)} />
                     )}
