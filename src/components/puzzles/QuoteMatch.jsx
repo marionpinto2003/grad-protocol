@@ -5,42 +5,42 @@ const QUOTES = [
   {
     quote: "A Lannister always pays his debts.",
     answer: "Tyrion Lannister",
-    options: ["Tyrion Lannister", "Jethalal Gada", "Cersei Lannister", "Popatlal"],
+    options: ["Tyrion Lannister", "Cersei Lannister", "Jon Snow", "Varys"],
   },
   {
     quote: "Babita ji... aap toh kamaal karti hain.",
     answer: "Jethalal Gada",
-    options: ["Jethalal Gada", "Jon Snow", "Taarak Mehta", "Bhide"],
+    options: ["Jethalal Gada", "Taarak Mehta", "Bhide", "Popatlal"],
   },
   {
     quote: "Chaos isn't a pit. Chaos is a ladder.",
     answer: "Littlefinger",
-    options: ["Littlefinger", "Jethalal Gada", "Daya Ben", "Varys"],
+    options: ["Littlefinger", "Varys", "Tyrion Lannister", "Cersei Lannister"],
   },
   {
     quote: "Ae Daya! Darvaazo tod do!",
     answer: "Jethalal Gada",
-    options: ["Jethalal Gada", "Ned Stark", "Popatlal", "Daenerys"],
+    options: ["Jethalal Gada", "Taarak Mehta", "Popatlal", "Bhide"],
   },
   {
     quote: "The night is dark and full of terrors.",
     answer: "Melisandre",
-    options: ["Melisandre", "Bapuji", "Cersei Lannister", "Daya Ben"],
+    options: ["Melisandre", "Cersei Lannister", "Sansa Stark", "Daenerys"],
   },
   {
     quote: "Mein aur meri tanhaai... aksar yeh baatein karte hain.",
     answer: "Popatlal",
-    options: ["Popatlal", "Jon Snow", "Jethalal Gada", "Sansa Stark"],
+    options: ["Popatlal", "Jethalal Gada", "Bhide", "Taarak Mehta"],
   },
   {
     quote: "Dracarys.",
     answer: "Daenerys",
-    options: ["Daenerys", "Daya Ben", "Bapuji", "Taarak Mehta"],
+    options: ["Daenerys", "Melisandre", "Cersei Lannister", "Sansa Stark"],
   },
   {
     quote: "Nonsense! Bilkul nonsense!",
     answer: "Bapuji",
-    options: ["Bapuji", "Tyrion Lannister", "Popatlal", "Jon Snow"],
+    options: ["Bapuji", "Jethalal Gada", "Popatlal", "Taarak Mehta"],
   },
 ];
 
@@ -163,11 +163,12 @@ export default function QuoteMatch({ onComplete }) {
         <div className="text-center py-4 space-y-3">
           <p className="text-red-400 font-bold">FAILED — {score}/8</p>
           <p className="text-red-700 text-xs">Bapuji is disappointed. Even Popatlal got more right.</p>
+          <p className="text-red-500 text-xs font-bold mt-1">PENALTY: Chug a BuzzBall. Right now.</p>
           <button
-            onClick={retry}
+            onClick={() => onComplete()}
             className="border border-amber-600 text-amber-400 px-4 py-2 rounded text-xs tracking-wider hover:bg-amber-950/30 transition"
           >
-            [ TRY AGAIN ]
+            [ PENALTY ACCEPTED — PROCEED ]
           </button>
         </div>
       )}
