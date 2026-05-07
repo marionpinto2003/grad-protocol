@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
-const TARGET_MIN = 62;
-const TARGET_MAX = 72;
+const TARGET_MIN = 65;
+const TARGET_MAX = 69;
 
 export default function GuinnessFill({ onComplete }) {
   const [filling, setFilling] = useState(false);
@@ -116,14 +116,23 @@ export default function GuinnessFill({ onComplete }) {
             <p className="text-red-400 text-sm">
               {level < TARGET_MIN ? "Too little. Guinness deserves respect." : "Overflow. Jethalal would be disappointed."}
             </p>
-            {attempts > 0 && <p className="text-red-700 text-xs mt-1">Attempt {attempts + 1}</p>}
+            {attempts >= 1 && <p className="text-red-500 text-xs font-bold mt-2">PENALTY: Buy a round of shots for the table.</p>}
           </div>
-          <button
-            onClick={reset}
-            className="w-full border border-amber-600 text-amber-400 py-2 rounded hover:bg-amber-950/30 transition text-sm tracking-wider"
-          >
-            [ TRY AGAIN ]
-          </button>
+          {attempts >= 1 ? (
+            <button
+              onClick={() => onComplete()}
+              className="w-full border border-amber-600 text-amber-400 py-2 rounded hover:bg-amber-950/30 transition text-sm tracking-wider"
+            >
+              [ PENALTY ACCEPTED — PROCEED ]
+            </button>
+          ) : (
+            <button
+              onClick={reset}
+              className="w-full border border-amber-600 text-amber-400 py-2 rounded hover:bg-amber-950/30 transition text-sm tracking-wider"
+            >
+              [ TRY AGAIN ]
+            </button>
+          )}
         </motion.div>
       )}
     </div>
