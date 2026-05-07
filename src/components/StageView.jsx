@@ -14,7 +14,6 @@ import FindJai from "./puzzles/FindJai";
 import QuoteMatch from "./puzzles/QuoteMatch";
 import PingPong from "./puzzles/PingPong";
 import MakeOut from "./puzzles/MakeOut";
-import Trivia from "./puzzles/Trivia";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
 import { syncAndWait } from "../utils/sync";
 import { savePhoto } from "../utils/storage";
@@ -108,7 +107,6 @@ export default function StageView({ stage, player, onComplete }) {
     if (id === "isleworth") return <QuoteMatch onComplete={() => setPuzzleDone(true)} />;
     if (id === "raul" && pid === "gupta") return <PingPong onComplete={() => setPuzzleDone(true)} />;
     if (id === "raul" && pid === "gohil") return <MakeOut onComplete={() => setPuzzleDone(true)} />;
-    if (id === "richmond") return <Trivia player={player} onComplete={() => setPuzzleDone(true)} />;
     return null;
   };
 

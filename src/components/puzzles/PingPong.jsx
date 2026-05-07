@@ -1,141 +1,183 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 
 const WIDTH = 300;
 const HEIGHT = 400;
-const BALL_SIZE = 12;
+const BALL_R = 7;
 const PADDLE_W = 60;
 const PADDLE_H = 10;
-const CPU_SPEED = 4;
-const INITIAL_SPEED = 5;
+const CPU_SPEED = 3.5;
+const BALL_SPEED = 5;
+
+function initState() {
+  return {
+    ballX: WIDTH / 2, ballY: HEIGHT / 2,
+    ballDX: BALL_SPEED * (Math.random() > 0.5 ? 1 : -1),
+    ballDY: -BALL_SPEED,
+    paddleX: WIDTH / 2 - PADDLE_W / 2,
+    cpuX: WIDTH / 2 - PADDLE_W / 2,
+    playerScore: 0, cpuScore: 0,
+  };
+}
 
 export default function PingPong({ onComplete }) {
   const [phase, setPhase] = useState("intro");
-  const [renderTick, setRenderTick] = useState(0);
   const [score, setScore] = useState({ player: 0, cpu: 0 });
-  const gameRef = useRef(null);
-  const animRef = useRef(null);
+  const canvasRef = useRef(null);
+  const stateRef = useRef(initState());
   const phaseRef = useRef("intro");
+  const animRef = useRef(null);
+  const loopRef = useRef(null);
 
-  const s = useRef({
-    ballX: WIDTH / 2, ballY: HEIGHT / 2,
-    ballDX: INITIAL_SPEED, ballDY: -INITIAL_SPEED,
-    paddleX: WIDTH / 2 - PADDLE_W / 2,
-    cpuPaddleX: WIDTH / 2 - PADDLE_W / 2,
-    score: { player: 0, cpu: 0 },
-  });
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const g = stateRef.current;
 
-  const resetBall = (scoredBy) => {
-    s.current.ballX = WIDTH / 2;
-    s.current.ballY = HEIGHT / 2;
-    s.current.ballDX = INITIAL_SPEED * (Math.random() > 0.5 ? 1 : -1);
-    s.current.ballDY = scoredBy === "player" ? -INITIAL_SPEED : INITIAL_SPEED;
-  };
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  const gameLoop = () => {
+    // Background
+    ctx.fillStyle = "#0a0a0a";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+    // Centre line
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = "#1a2e1a";
+    ctx.beginPath();
+    ctx.moveTo(0, HEIGHT / 2);
+    ctx.lineTo(WIDTH, HEIGHT / 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // CPU paddle
+    ctx.fillStyle = "#b91c1c";
+    ctx.beginPath();
+    ctx.roundRect(g.cpuX, 20, PADDLE_W, PADDLE_H, 3);
+    ctx.fill();
+
+    // Player paddle
+    ctx.fillStyle = "#16a34a";
+    ctx.beginPath();
+    ctx.roundRect(g.paddleX, HEIGHT - 30 - PADDLE_H, PADDLE_W, PADDLE_H, 3);
+    ctx.fill();
+
+    // Ball
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(g.ballX, g.ballY, BALL_R, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Labels
+    ctx.fillStyle = "#7f1d1d";
+    ctx.font = "10px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("TRINI", WIDTH / 2, 14);
+    ctx.fillStyle = "#14532d";
+    ctx.fillText("YOU", WIDTH / 2, HEIGHT - 4);
+  }, []);
+
+  const gameLoop = useCallback(() => {
     if (phaseRef.current !== "playing") return;
-    const g = s.current;
+    const g = stateRef.current;
 
     g.ballX += g.ballDX;
     g.ballY += g.ballDY;
 
-    // Wall bounce X
-    if (g.ballX <= 0 || g.ballX >= WIDTH - BALL_SIZE) {
-      g.ballDX *= -1;
-      g.ballX = g.ballX <= 0 ? 0 : WIDTH - BALL_SIZE;
-    }
+    // Wall bounce
+    if (g.ballX - BALL_R <= 0) { g.ballDX = Math.abs(g.ballDX); g.ballX = BALL_R; }
+    if (g.ballX + BALL_R >= WIDTH) { g.ballDX = -Math.abs(g.ballDX); g.ballX = WIDTH - BALL_R; }
 
     // CPU tracks ball
-    const cpuCenter = g.cpuPaddleX + PADDLE_W / 2;
-    if (cpuCenter < g.ballX + BALL_SIZE / 2) {
-      g.cpuPaddleX = Math.min(g.cpuPaddleX + CPU_SPEED, WIDTH - PADDLE_W);
-    } else {
-      g.cpuPaddleX = Math.max(g.cpuPaddleX - CPU_SPEED, 0);
-    }
+    const cpuCenter = g.cpuX + PADDLE_W / 2;
+    if (cpuCenter < g.ballX) g.cpuX = Math.min(g.cpuX + CPU_SPEED, WIDTH - PADDLE_W);
+    else g.cpuX = Math.max(g.cpuX - CPU_SPEED, 0);
 
-    // Player paddle collision (bottom)
+    // Player paddle collision
+    const playerPaddleY = HEIGHT - 30 - PADDLE_H;
     if (
-      g.ballY + BALL_SIZE >= HEIGHT - 30 - PADDLE_H &&
-      g.ballY + BALL_SIZE <= HEIGHT - 20 &&
-      g.ballX + BALL_SIZE >= g.paddleX &&
+      g.ballY + BALL_R >= playerPaddleY &&
+      g.ballY + BALL_R <= playerPaddleY + PADDLE_H + 6 &&
+      g.ballX >= g.paddleX &&
       g.ballX <= g.paddleX + PADDLE_W
     ) {
       g.ballDY = -Math.abs(g.ballDY);
-      const hitPos = (g.ballX + BALL_SIZE / 2 - g.paddleX) / PADDLE_W;
-      g.ballDX = (hitPos - 0.5) * 10;
+      const hit = (g.ballX - g.paddleX) / PADDLE_W;
+      g.ballDX = (hit - 0.5) * 10;
     }
 
-    // CPU paddle collision (top)
+    // CPU paddle collision
     if (
-      g.ballY <= 30 + PADDLE_H &&
-      g.ballY >= 20 &&
-      g.ballX + BALL_SIZE >= g.cpuPaddleX &&
-      g.ballX <= g.cpuPaddleX + PADDLE_W
+      g.ballY - BALL_R <= 20 + PADDLE_H &&
+      g.ballY - BALL_R >= 20 - 6 &&
+      g.ballX >= g.cpuX &&
+      g.ballX <= g.cpuX + PADDLE_W
     ) {
       g.ballDY = Math.abs(g.ballDY);
     }
 
-    // Player scores (ball past CPU)
-    if (g.ballY < 0) {
-      g.score.player += 1;
-      const snap = { ...g.score };
-      if (snap.player >= 3) {
+    // Scoring
+    if (g.ballY - BALL_R < 0) {
+      g.playerScore += 1;
+      setScore({ player: g.playerScore, cpu: g.cpuScore });
+      if (g.playerScore >= 3) {
         phaseRef.current = "won";
         setPhase("won");
-        setScore(snap);
-        setTimeout(() => onComplete(), 1200);
+        draw();
+        setTimeout(() => onComplete(), 1400);
         return;
       }
-      setScore(snap);
-      resetBall("player");
+      g.ballX = WIDTH / 2; g.ballY = HEIGHT / 2;
+      g.ballDX = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
+      g.ballDY = -BALL_SPEED;
     }
 
-    // CPU scores (ball past player)
-    if (g.ballY > HEIGHT) {
-      g.score.cpu += 1;
-      const snap = { ...g.score };
-      if (snap.cpu >= 3) {
+    if (g.ballY + BALL_R > HEIGHT) {
+      g.cpuScore += 1;
+      setScore({ player: g.playerScore, cpu: g.cpuScore });
+      if (g.cpuScore >= 3) {
         phaseRef.current = "lost";
         setPhase("lost");
-        setScore(snap);
+        draw();
         return;
       }
-      setScore(snap);
-      resetBall("cpu");
+      g.ballX = WIDTH / 2; g.ballY = HEIGHT / 2;
+      g.ballDX = BALL_SPEED * (Math.random() > 0.5 ? 1 : -1);
+      g.ballDY = BALL_SPEED;
     }
 
-    setRenderTick(t => t + 1);
-    animRef.current = requestAnimationFrame(gameLoop);
-  };
+    draw();
+    animRef.current = requestAnimationFrame(loopRef.current);
+  }, [draw, onComplete]);
+
+  loopRef.current = gameLoop;
 
   const startGame = () => {
-    s.current = {
-      ballX: WIDTH / 2, ballY: HEIGHT / 2,
-      ballDX: INITIAL_SPEED, ballDY: -INITIAL_SPEED,
-      paddleX: WIDTH / 2 - PADDLE_W / 2,
-      cpuPaddleX: WIDTH / 2 - PADDLE_W / 2,
-      score: { player: 0, cpu: 0 },
-    };
+    if (animRef.current) cancelAnimationFrame(animRef.current);
+    stateRef.current = initState();
     setScore({ player: 0, cpu: 0 });
     phaseRef.current = "playing";
     setPhase("playing");
-    animRef.current = requestAnimationFrame(gameLoop);
+    animRef.current = requestAnimationFrame(loopRef.current);
   };
+
+  useEffect(() => {
+    if (phase === "playing") draw();
+  }, [phase, draw]);
 
   useEffect(() => {
     return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
   }, []);
 
-  const handleTouch = (e) => {
+  const handleMove = (e) => {
     if (phaseRef.current !== "playing") return;
-    const rect = gameRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const touch = e.touches?.[0] || e;
-    const x = touch.clientX - rect.left - PADDLE_W / 2;
-    s.current.paddleX = Math.max(0, Math.min(WIDTH - PADDLE_W, x));
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const x = clientX - rect.left - PADDLE_W / 2;
+    stateRef.current.paddleX = Math.max(0, Math.min(WIDTH - PADDLE_W, x));
   };
-
-  const g = s.current;
 
   return (
     <div className="space-y-3 font-mono">
@@ -164,28 +206,19 @@ export default function PingPong({ onComplete }) {
             <span className="text-green-400">YOU: {score.player}</span>
           </div>
 
-          <div
-            ref={gameRef}
-            className="relative mx-auto border border-green-900 bg-black/60 overflow-hidden select-none"
-            style={{ width: `${WIDTH}px`, height: `${HEIGHT}px` }}
-            onTouchMove={handleTouch}
-            onMouseMove={handleTouch}
-          >
-            <div className="absolute left-0 right-0 border-t border-dashed border-green-900" style={{ top: HEIGHT / 2 }} />
-            <div className="absolute top-2 left-0 right-0 text-center"><span className="text-red-800 text-xs">TRINI</span></div>
-            <div className="absolute bottom-2 left-0 right-0 text-center"><span className="text-green-800 text-xs">YOU</span></div>
-
-            {/* CPU Paddle */}
-            <div className="absolute bg-red-700 rounded" style={{ width: PADDLE_W, height: PADDLE_H, left: g.cpuPaddleX, top: 20 }} />
-
-            {/* Player Paddle */}
-            <div className="absolute bg-green-500 rounded" style={{ width: PADDLE_W, height: PADDLE_H, left: g.paddleX, bottom: 30 }} />
-
-            {/* Ball */}
-            <div className="absolute bg-white rounded-full" style={{ width: BALL_SIZE, height: BALL_SIZE, left: g.ballX, top: g.ballY }} />
+          <div className="relative mx-auto" style={{ width: WIDTH }}>
+            <canvas
+              ref={canvasRef}
+              width={WIDTH}
+              height={HEIGHT}
+              className="border border-green-900 rounded block"
+              onMouseMove={handleMove}
+              onTouchMove={handleMove}
+              style={{ touchAction: "none" }}
+            />
 
             {(phase === "won" || phase === "lost") && (
-              <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/75 flex items-center justify-center rounded">
                 <div className="text-center space-y-2 px-4">
                   {phase === "won" ? (
                     <>
