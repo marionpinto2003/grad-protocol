@@ -6,7 +6,61 @@ import StageView from "./components/StageView";
 import MissionProgress from "./components/MissionProgress";
 import PhotoGallery from "./components/PhotoGallery";
 
+const SITE_PASSWORD = "ihaveasmallpp";
+
+function PasswordGate({ onUnlock }) {
+  const [input, setInput] = useState("");
+  const [error, setError] = useState(false);
+
+  const attempt = () => {
+    if (input.trim().toLowerCase() === SITE_PASSWORD) {
+      onUnlock();
+    } else {
+      setError(true);
+      setInput("");
+      setTimeout(() => setError(false), 1500);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#030a03] text-green-400 font-mono flex items-center justify-center px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-sm space-y-6 text-center"
+      >
+        <div className="space-y-1">
+          <p className="text-green-500 text-xs uppercase tracking-widest">CLASSIFIED SYSTEM</p>
+          <p className="text-green-300 text-lg font-bold">THE GRAD PROTOCOL</p>
+          <p className="text-green-800 text-xs">Authorised personnel only.</p>
+        </div>
+
+        <div className="space-y-3">
+          <input
+            type="password"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && attempt()}
+            placeholder="Enter access code"
+            className={`w-full bg-black/40 border rounded px-4 py-3 text-green-300 text-sm text-center tracking-widest placeholder-green-900 outline-none transition ${
+              error ? "border-red-500" : "border-green-900 focus:border-green-600"
+            }`}
+          />
+          {error && <p className="text-red-500 text-xs">Access denied.</p>}
+          <button
+            onClick={attempt}
+            className="w-full border border-green-700 text-green-400 py-3 rounded hover:bg-green-950/30 transition text-sm tracking-wider"
+          >
+            [ AUTHENTICATE ]
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function App() {
+  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem("grad_auth") === "1");
   const [player, setPlayer] = useState(null);
   const [appState, setAppState] = useState(null);
   const [showProgress, setShowProgress] = useState(false);
@@ -36,6 +90,10 @@ export default function App() {
       setFinalScreen(false);
     }
   };
+
+  if (!unlocked) {
+    return <PasswordGate onUnlock={() => { sessionStorage.setItem("grad_auth", "1"); setUnlocked(true); }} />;
+  }
 
   if (!player) {
     return <PlayerSelect onSelect={setPlayer} />;
