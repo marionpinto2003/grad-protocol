@@ -101,7 +101,7 @@ export const STAGES = [
         "Sunglasses required. Non-negotiable.",
       ],
       missionBrief: "Remember when you thought you were going to be a high-flying Maverick for Halloween? You returned your flight suit because of a fake AI photo and ended up looking like you were headed to a specific celestial body instead. Go to the spot on the High Road that matches your Astronaut destination.",
-      task: "Photo of two Guinness glasses. You must be wearing sunglasses. Full Maverick commitment. No exceptions.",
+      task: "Order a Guinness. Split it between two glasses by eye — no measuring. Both glasses must look even. Photo of both glasses side by side. Sunglasses mandatory.",
       clue: "Royale Leisure Park. Two stops in one. First — a pool table where someone lost every game and learned nothing. Then — reclining seats, David's lecture sacrificed, and a film that did not deserve the effort. Both memories. Same postcode. Western Avenue.",
     },
     gohil: {
@@ -112,7 +112,7 @@ export const STAGES = [
         "Your stomach has been through worse.",
       ],
       missionBrief: "In the Seven Kingdoms, the Long version of this brings the White Walkers. Here it just brings cheap Guinness. Look for the initials of a jet pioneer paired with the silent ruler of the night sky. If the floor isn't sticky, you're in the wrong kingdom.",
-      task: "Photo of two Guinness glasses. Make sure Gupta is wearing his sunglasses.",
+      task: "Order a Guinness. Split it between two glasses by eye — no measuring. Both glasses must look even. Photo of both glasses side by side. Make sure Gupta is wearing his sunglasses.",
       clue: "Royale Leisure Park. Two stops in one. You taught him pool here — he still lost. Then reclining seats, a film that honestly wasn't worth bunking David's class for. Both of them are right there. Western Avenue.",
     },
   },

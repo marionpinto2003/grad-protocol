@@ -7,12 +7,12 @@ import MugshotGenerator from "./MugshotGenerator";
 import ClueReveal from "./ClueReveal";
 import PhotoCapture from "./PhotoCapture";
 import CaesarCipher from "./puzzles/CaesarCipher";
-import GuinnessFill from "./puzzles/GuinnessFill";
 import PeanutThrow from "./puzzles/PeanutThrow";
 import LimescaleScrub from "./puzzles/LimescaleScrub";
 import FindJai from "./puzzles/FindJai";
 import QuoteMatch from "./puzzles/QuoteMatch";
 import PingPong from "./puzzles/PingPong";
+import GuinnessCheck from "./puzzles/GuinnessCheck";
 import MakeOut from "./puzzles/MakeOut";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
 import { syncAndWait } from "../utils/sync";
@@ -100,7 +100,7 @@ export default function StageView({ stage, player, onComplete }) {
     const id = stage["id"];
     const pid = player["id"];
 
-    if (id === "spoons") return <GuinnessFill onComplete={() => setPuzzleDone(true)} />;
+    if (id === "spoons") return <GuinnessCheck onComplete={() => setPuzzleDone(true)} />;
     if (id === "booker" && pid === "gupta") return <PeanutThrow onComplete={() => setPuzzleDone(true)} />;
     if (id === "booker" && pid === "gohil") return <LimescaleScrub onComplete={() => setPuzzleDone(true)} />;
     if (id === "police" && pid === "gupta") return <FindJai onComplete={() => setPuzzleDone(true)} />;
