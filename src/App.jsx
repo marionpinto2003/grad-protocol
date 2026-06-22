@@ -6,14 +6,14 @@ import StageView from "./components/StageView";
 import MissionProgress from "./components/MissionProgress";
 import PhotoGallery from "./components/PhotoGallery";
 
-const SITE_PASSWORD = "ihaveasmallpp";
+const SITE_PASSWORD = import.meta.env.VITE_SITE_PASSWORD;
 
 function PasswordGate({ onUnlock }) {
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
 
   const attempt = () => {
-    if (input.trim().toLowerCase() === SITE_PASSWORD) {
+    if (input.trim().toLowerCase() === SITE_PASSWORD?.toLowerCase()) {
       onUnlock();
     } else {
       setError(true);
