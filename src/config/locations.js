@@ -68,7 +68,7 @@ export const STAGES = [
       missionBrief: "Jethalal says: 'Pehle bhagwan, phir khaana.' Head to the spot where masala chips and cheese are more iconic than Daya and her Garba. Marion has already paid.",
       task: "Enjoy Funky Chips — courtesy of Pinto. Take a photo.",
       wordHalf: "NAV",
-      clue: "Every October, the car park outside the Arena becomes a different world. Dandiya until midnight, the whole of Gujarat in one postcode. A Delhi boy on the side trying to copy the steps and failing completely. Your half of the next location: the prefix of the app that routes you safely home.",
+      clue: "Every October, the car park outside the Arena becomes a different world. Dandiya until midnight, the whole of Gujarat in one postcode. A Delhi boy on the side trying to copy the steps and failing completely. Your half of the unlock word: the prefix of the app that routes you safely home.",
     },
     gohil: {
       missionTitle: "The Fatakada Break",
@@ -91,7 +91,7 @@ export const STAGES = [
     lat: 51.5535255,
     lng: -0.2927701,
     radius: 50,
-    validation: "photo",
+    validation: "none",
     unlockType: "descriptive",
     gupta: {
       missionTitle: "The Maverick Moon-Landing",
@@ -101,7 +101,7 @@ export const STAGES = [
         "Sunglasses required. Non-negotiable.",
       ],
       missionBrief: "Remember when you thought you were going to be a high-flying Maverick for Halloween? You returned your flight suit because of a fake AI photo and ended up looking like you were headed to a specific celestial body instead. Go to the spot on the High Road that matches your Astronaut destination.",
-      task: "Order a Guinness. Split it between two glasses by eye — no measuring. Both glasses must look even. Photo of both glasses side by side. Sunglasses mandatory.",
+      task: "Split the G. Photo proof required.",
       clue: "Royale Leisure Park. Two stops in one. First — a pool table where someone lost every game and learned nothing. Then — reclining seats, David's lecture sacrificed, and a film that did not deserve the effort. Both memories. Same postcode. Western Avenue.",
     },
     gohil: {
@@ -112,7 +112,7 @@ export const STAGES = [
         "Your stomach has been through worse.",
       ],
       missionBrief: "In the Seven Kingdoms, the Long version of this brings the White Walkers. Here it just brings cheap Guinness. Look for the initials of a jet pioneer paired with the silent ruler of the night sky. If the floor isn't sticky, you're in the wrong kingdom.",
-      task: "Order a Guinness. Split it between two glasses by eye — no measuring. Both glasses must look even. Photo of both glasses side by side. Make sure Gupta is wearing his sunglasses.",
+      task: "Split the G. Photo proof required. Make sure Gupta is wearing his sunglasses.",
       clue: "Royale Leisure Park. Two stops in one. You taught him pool here — he still lost. Then reclining seats, a film that honestly wasn't worth bunking David's class for. Both of them are right there. Western Avenue.",
     },
   },
@@ -126,7 +126,7 @@ export const STAGES = [
     radius: 60,
     validation: "photo",
     unlockType: "wordSplit",
-    unlockWord: "SAFENAV",
+    unlockWord: "DJIMINI5PRO",
     gupta: {
       missionTitle: "The Royale Rumble",
       terminalLines: [
@@ -136,8 +136,8 @@ export const STAGES = [
       ],
       missionBrief: "Tenpin Acton. GOHIL taught you pool on these very tables. You still lost. He won at everything. Then reclining seats, Now You See Me 3, and a film that did not deserve the lecture you both sacrificed.",
       task: "Enjoy a game of pool. Then — punch machine. Get 800 or above. Photo as proof.",
-      wordHalf: "SAFE",
-      clue: "Four years of late nights, Google APIs, and building something that actually mattered. Two final year projects. Two different kinds of protection. One keeps you safe on the road. The other keeps you safe in court. Your half: the first four letters of the app that does the routing.",
+      wordHalf: "DJI",
+      clue: "Every Westfield trip starts as Pinto shopping for clothes and somehow ends with both of you drifting into the same dangerous store. Flying cameras, bad financial decisions, and way too much excitement. Your part is the store/company name — three letters.",
     },
     gohil: {
       missionTitle: "The Royale Rumble",
@@ -148,8 +148,8 @@ export const STAGES = [
       ],
       missionBrief: "You taught Pinto pool on these tables. You won every game — obviously. There was also a brownie involved and we are moving on immediately. Then reclining seats, a lecture sacrificed, a film that didn't earn it.",
       task: "Enjoy a game of pool. Then — punch machine. Get 800 or above. Photo as proof.",
-      wordHalf: "NAV",
-      clue: "His dad doesn't know the law. Yours does. You built something because of everything you watched him navigate. Two builders. Two projects. One routes you home safely. The other routes you through the system. Your half: the last three letters of the app that does the routing.",
+      wordHalf: "MINI5PRO",
+      clue: "The New York drone may be gone, but the graduation replacement has entered the chat. Dad came through. Your part is the exact compact model name, no spaces.",
     },
   },
   {
@@ -195,7 +195,7 @@ export const STAGES = [
     radius: 60,
     validation: "arrest",
     unlockType: "wordSplit",
-    unlockWord: "WINTERFELL",
+    unlockWord: "PANEERBUTTERMASALA",
     gupta: {
       missionTitle: "The Jailbreak",
       terminalLines: [
@@ -205,8 +205,8 @@ export const STAGES = [
       ],
       missionBrief: "GOHIL has been arrested. Again. Jai did a runner to India and left him holding the confusion at Sainsbury's. You got the call. You went. No hesitation — same as always. Authorise his release.",
       task: "Authorise bail using the code on your screen. Show it to GOHIL.",
-      wordHalf: "WINTER",
-      clue: "This is the holy land of sleepovers, where the Paneer Butter Masala was legendary and the PS5 never got a rest. Your half of the password is where the true logic of a program lives — and it's also what you've been doing all day. Four letters. Heading ____ home. The bail code? 230425 — that's 23rd April 2025, the day Marion first properly spoke to both of you.",
+      wordHalf: "PANEER",
+      clue: "Bail approved. Next stop is the house where sleepovers became routine, the PS5 worked overtime, and one dish became legendary. Your part is the main ingredient — six letters. The bail code? 230425 — that's 23rd April 2025, the day Marion first properly spoke to both of you.",
     },
     gohil: {
       missionTitle: "The Jailbreak",
@@ -216,9 +216,9 @@ export const STAGES = [
         "This is not your fault. Mostly.",
       ],
       missionBrief: "Jai really left you holding the bag at Sainsbury's, didn't he? Thank god for Gupta. Stand by the station railings. Look like you're serving time for Jai's heist. GUPTA is arranging bail.",
-      task: "Mugshot first. Then recreate the behind bars photo at the station railings. Wait for GUPTA to authorise your release.",
-      wordHalf: "FELL",
-      clue: "TMKOC on the TV, COD on the screen, and nights that never ended. Your half of the password is the second half of your Comp Sci degree focus. It's also where we are in the protocol — approaching the very ____. Combine it with his half.",
+      task: "Mugshot first. Then recreate the behind-bars photo at the station railings. GUPTA has the bail code — get it from him to complete the release.",
+      wordHalf: "BUTTERMASALA",
+      clue: "Release granted. Head back to the kitchen where TMKOC played in the background, COD came after, and your signature dish carried the night. Your part is the rest of the dish name, no spaces.",
     },
   },
   {
@@ -240,7 +240,7 @@ export const STAGES = [
       ],
       missionBrief: "TW7. The postcode that felt like home even when it wasn't yours. The kitchen. The paneer butter masala. The nights nobody planned but everyone stayed for. Stand outside. Take the photo.",
       task: "Photo outside the house. Then prank call Rachit — on speaker, together.",
-      clue: "SGA treasurer. SASA president. Always in the hub or the library while Gohil was winning awards he never got handed to him. You lost to Trini at table tennis in that building. Trini, of all people. Find a table, win a game, restore your honour. Then go where the view makes everything feel smaller — the lodge on the hill, the deer, the quiet. She used to work there. You know the one.",
+      clue: "SGA treasurer. SASA president. Table tennis trauma. Trini, of all people. Your honour must be restored where the lectures happened and the hub became home. Richmond American University London. Building 12.",
     },
     gohil: {
       missionTitle: "The PBM Sanctuary",
@@ -251,7 +251,7 @@ export const STAGES = [
       ],
       missionBrief: "Teri kitchen. Tera chulha. Paneer butter masala — perfect bana tha. TMKOC on in the background, COD baad mein, aur raat kab gayi pata nahi. TW7 6GH. Ek baar aur.",
       task: "Photo outside. Then prank call Rachit — on speaker, together.",
-      clue: "There were classrooms in that building that saw more action than the lectures ever did. There was also a cardboard box, a case of Monster, and a security guard who had questions. Help Gupta beat Trini at table tennis — he's still not over it. Then find the park where the deer are unbothered and the lodge on the hill has the best view in London.",
+      clue: "Classrooms, cardboard boxes, Monster cans, security guards with questions, Quant chaos, and the award David still owes you. Time to return to the campus that somehow survived all of it. Richmond American University London. Building 12.",
     },
   },
   {
@@ -264,7 +264,7 @@ export const STAGES = [
     radius: 60,
     validation: "photo",
     unlockType: "wordSplit",
-    unlockWord: "VEERZARA",
+    unlockWord: "CHECKMATE",
     gupta: {
       missionTitle: "The Legend of Building 12",
       terminalLines: [
@@ -274,8 +274,8 @@ export const STAGES = [
       ],
       missionBrief: "SGA treasurer. SASA president. Always in the hub or the library while Gohil was winning awards he never got handed to him. You lost to Trini at table tennis in this building. Trini, of all people.",
       task: "Find the table tennis table. Win a game. Photo of the win. Gohil must hold a fake award.",
-      wordHalf: "ZARA",
-      clue: "The views here are better than any 4K monitor in RAUL. Your half of the final password is the heroine of that same movie — the girl Veer gave up everything for. Combine it with the pilot's name. LA is waiting for you, Aryan.",
+      wordHalf: "CHECK",
+      clue: "Campus cleared, but one memory still has evidence. Remember when you searched every classroom trying to find Gohil, while he and Pinto were hiding in a random one making very questionable academic choices? Your half is the first five letters of the chess warning before the final move.",
     },
     gohil: {
       missionTitle: "The Legend of Building 12",
@@ -286,8 +286,8 @@ export const STAGES = [
       ],
       missionBrief: "There were classrooms in this building that saw more action than the lectures ever did. There was also a cardboard box, a case of Monster, and a security guard who had questions. President of Quant. David never gave you the award. Everyone knows.",
       task: "Find one of the classrooms. You know what you did in them. Complete the classroom challenge — then take a photo. Hold a fake award — claim what David never gave you.",
-      wordHalf: "VEER",
-      clue: "The protocol ends here. Your half of the final password is the first name of the pilot played by SRK in our favourite cross-border romance. He waited 22 years for his freedom. You only waited 4 for this degree. Look toward the horizon where your next chapter begins.",
+      wordHalf: "MATE",
+      clue: "Four years, one final move. In chess, this is how the game ends when the king is trapped. Your half is the last half of that word — also what Gupta somehow became.",
     },
   },
   {

@@ -1,58 +1,38 @@
-import { DEV_MODE } from "../config/devmode";
-import { FIREBASE_CONFIG } from "../config/firebase";
+const STORAGE_KEY = "grad_protocol_progress";
 
-let db = null;
-
-async function getDb() {
-  if (db) return db;
+export function getProgress() {
   try {
-    const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-    const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-    const app = getApps().length === 0 ? initializeApp(FIREBASE_CONFIG) : getApps()[0];
-    db = getFirestore(app);
-    return db;
-  } catch (e) {
-    console.warn("Firebase unavailable", e);
-    return null;
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
   }
 }
 
-export async function syncAndWait(stageId, playerId, onBothReady) {
-  if (DEV_MODE) {
-    const t = setTimeout(() => onBothReady(), 800);
-    return () => clearTimeout(t);
-  }
+export function saveProgress(progress) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
 
-  try {
-    const { doc, setDoc, onSnapshot, serverTimestamp } = await import(
-      "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
-    );
-    const firestore = await getDb();
-    if (!firestore) {
-      onBothReady();
-      return () => {};
-    }
+export function markStageComplete(stageId) {
+  const progress = getProgress();
 
-    await setDoc(
-      doc(firestore, "grad_protocol", "sync", stageId, playerId),
-      { done: true, timestamp: serverTimestamp() },
-      { merge: true }
-    );
+  const updated = {
+    ...progress,
+    [stageId]: {
+      completed: true,
+      completedAt: new Date().toISOString(),
+    },
+  };
 
-    const otherPlayer = playerId === "gupta" ? "gohil" : "gupta";
-    const unsub = onSnapshot(
-      doc(firestore, "grad_protocol", "sync", stageId, otherPlayer),
-      (snap) => {
-        if (snap.exists() && snap.data()?.done) {
-          onBothReady();
-          unsub();
-        }
-      }
-    );
-    return unsub;
-  } catch (e) {
-    console.warn("Sync failed, auto-continuing", e);
-    onBothReady();
-    return () => {};
-  }
+  saveProgress(updated);
+  return updated;
+}
+
+export function isStageComplete(stageId) {
+  const progress = getProgress();
+  return Boolean(progress?.[stageId]?.completed);
+}
+
+export function resetProgress() {
+  localStorage.removeItem(STORAGE_KEY);
 }

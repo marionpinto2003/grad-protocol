@@ -13,9 +13,10 @@ import FindJai from "./puzzles/FindJai";
 import QuoteMatch from "./puzzles/QuoteMatch";
 import PingPong from "./puzzles/PingPong";
 import GuinnessCheck from "./puzzles/GuinnessCheck";
+import GuinnessPenalty from "./puzzles/GuinnessPenalty";
 import MakeOut from "./puzzles/MakeOut";
 import { checkGeofence, getCurrentPosition } from "../utils/geofence";
-import { syncAndWait } from "../utils/sync";
+import { markStageComplete } from "../utils/sync";
 import { savePhoto } from "../utils/storage";
 
 export default function StageView({ stage, player, onComplete }) {
@@ -24,11 +25,9 @@ export default function StageView({ stage, player, onComplete }) {
   const [gpsData, setGpsData] = useState({ inside: false, distance: null, accuracy: null });
   const [wordInput, setWordInput] = useState("");
   const [wordError, setWordError] = useState(false);
-  const [waitingForPartner, setWaitingForPartner] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [puzzleDone, setPuzzleDone] = useState(false);
   const intervalRef = useRef(null);
-  const cleanupSyncRef = useRef(null);
 
   const playerData = stage[player["id"]];
 
@@ -56,7 +55,6 @@ export default function StageView({ stage, player, onComplete }) {
   useEffect(() => {
     return () => {
       clearInterval(intervalRef.current);
-      cleanupSyncRef.current?.();
     };
   }, []);
 
@@ -74,14 +72,8 @@ export default function StageView({ stage, player, onComplete }) {
       return;
     }
 
-    setWaitingForPartner(true);
+    markStageComplete(stage["id"]);
     setPhase("clue");
-
-    const cleanup = await syncAndWait(stage["id"], player["id"], () => {
-      setWaitingForPartner(false);
-    });
-
-    cleanupSyncRef.current = cleanup;
   }, [stage, playerData, player, onComplete]);
 
   const handleWordSubmit = () => {
@@ -100,7 +92,7 @@ export default function StageView({ stage, player, onComplete }) {
     const id = stage["id"];
     const pid = player["id"];
 
-    if (id === "spoons") return <GuinnessCheck onComplete={() => setPuzzleDone(true)} />;
+    if (id === "spoons") return <GuinnessPenalty onComplete={() => handleValidationComplete()} />;
     if (id === "booker" && pid === "gupta") return <PeanutThrow onComplete={() => setPuzzleDone(true)} />;
     if (id === "booker" && pid === "gohil") return <LimescaleScrub onComplete={() => setPuzzleDone(true)} />;
     if (id === "police" && pid === "gupta") return <FindJai onComplete={() => setPuzzleDone(true)} />;
@@ -252,7 +244,6 @@ export default function StageView({ stage, player, onComplete }) {
               <ClueReveal
                 clue={playerData.clue}
                 unlockType={stage.unlockType}
-                waitingForPartner={waitingForPartner}
                 capturedPhoto={capturedPhoto}
                 onProceedToUnlock={() => setPhase("wordUnlock")}
                 onProceedToComplete={() => {

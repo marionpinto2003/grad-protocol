@@ -25,20 +25,26 @@ export function saveState(state, playerId) {
   }
 }
 
-export function completeStage(state, stageIndex, playerId) {
+export function completeStage(state, stageIndex, playerId, totalStages) {
   const completedStages = Array.from(
     new Set([...state.completedStages, stageIndex])
   );
-  const nextStage = Math.min(stageIndex + 1, 8);
+
+  const isFinalStage = completedStages.length >= totalStages;
+  const nextStage = isFinalStage
+    ? stageIndex
+    : Math.min(stageIndex + 1, totalStages - 1);
+
   const newState = {
     ...state,
     currentStage: nextStage,
     completedStages,
+    completedAt: isFinalStage ? Date.now() : state.completedAt,
   };
+
   saveState(newState, playerId);
   return newState;
 }
-
 export function resetState(playerId) {
   localStorage.removeItem(STORAGE_KEY(playerId));
   return { ...DEFAULT_STATE, startedAt: Date.now() };
