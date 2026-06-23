@@ -80,7 +80,7 @@ export default function App() {
   }, [appState]);
 
   const handleStageComplete = useCallback(async (stageIndex) => {
-    const newState = completeStage(appState, stageIndex, player.id);
+    const newState = completeStage(appState, stageIndex, player.id, STAGES.length);
     setAppState(newState);
   }, [appState, player]);
 
