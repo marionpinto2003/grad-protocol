@@ -193,7 +193,7 @@ export default function App() {
         )}
 
         <p className="text-green-900 text-xs text-center tracking-widest pb-4">
-          GRAD_PROTOCOL v2.0 · EYES ONLY
+          GRAD_PROTOCOL v2.1 CLUEFIX · EYES ONLY
         </p>
       </main>
     </div>
