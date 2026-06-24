@@ -300,7 +300,7 @@ export const STAGES = [
     radius: 60,
     validation: "photo",
     unlockType: "wordSplit",
-    unlockWord: "VEERZARA",
+    unlockWord: "CUMLAUDE",
     gupta: {
       missionTitle: "The Westward Watch",
       terminalLines: [
@@ -310,7 +310,8 @@ export const STAGES = [
       ],
       missionBrief: "The views here are better than any 4K monitor in RAUL. This is it. The last stop. St Paul's on the horizon. Bring the drone. LA is waiting for you, Aryan.",
       task: "Final photo — both of you, together, on the Mound.",
-      clue: null,
+      wordHalf: "CUM",
+      clue: "Final honour unlocked. Your half looks extremely suspicious on its own, but academically it is somehow respectable. First three letters. Do not say it too proudly in public.",
     },
     gohil: {
       missionTitle: "The Westward Watch",
@@ -321,7 +322,8 @@ export const STAGES = [
       ],
       missionBrief: "The protocol ends here. The deer don't care about your degree. Ronnie would have loved this park. Look toward the horizon — your next chapter begins somewhere over there.",
       task: "Final photo — both of you, together, on the Mound.",
-      clue: null,
+      wordHalf: "LAUDE",
+      clue: "Your half sounds like something your Gujarati/Hindi-speaking friends should absolutely not be shouting in Richmond Park. Five letters. Together, it becomes Marion's academic flex.",
     },
   },
 ];
