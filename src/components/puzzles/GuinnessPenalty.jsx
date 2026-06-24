@@ -89,7 +89,7 @@ export default function GuinnessPenalty({ onComplete }) {
               onClick={onComplete}
               className="w-full border border-amber-500 text-amber-400 py-3 rounded hover:bg-amber-950/30 transition text-sm tracking-wider"
             >
-              [ PENALTY COMPLETED — REVEAL CLUE ]
+              [ PENALTY COMPLETED — CONTINUE ]
             </button>
           </motion.div>
         )}
