@@ -206,7 +206,7 @@ export const STAGES = [
       missionBrief: "GOHIL has been arrested. Again. Jai did a runner to India and left him holding the confusion at Sainsbury's. You got the call. You went. No hesitation — same as always. Authorise his release.",
       task: "Authorise bail using the code on your screen. Show it to GOHIL.",
       wordHalf: "PANEER",
-      clue: "Bail approved. Next stop is the house where sleepovers became routine, the PS5 worked overtime, and one dish became legendary. Your part is the main ingredient — six letters. The bail code? 230425 — that's 23rd April 2025, the day Marion first properly spoke to both of you.",
+      clue: "Bail approved. Next stop is the house where sleepovers became routine, the PS5 worked overtime, and one dish became legendary. Your part is the main ingredient — six letters.",
     },
     gohil: {
       missionTitle: "The Jailbreak",
