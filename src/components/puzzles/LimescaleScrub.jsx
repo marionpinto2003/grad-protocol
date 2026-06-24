@@ -168,7 +168,7 @@ export default function LimescaleScrub({ onComplete }) {
           animate={{ opacity: 1 }}
           className="border border-green-500 rounded p-3 bg-green-950/20 text-center"
         >
-          <p className="text-green-400 text-sm">✓ Kettle descaled. Jai forgiven. Mostly.</p>
+          <p className="text-green-400 text-sm">✓ Kettle descaled. Nirali forgiven. Mostly.</p>
         </motion.div>
       )}
     </div>
