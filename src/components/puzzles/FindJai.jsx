@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const DARE_TEXT = "You failed to catch Jai. Just like last time. Post an embarrassing photo on your story and keep it up for 1 hour. Tap 'I posted it' to continue.";
+const DARE_TEXT = "You failed to catch Jay. Just like last time. Post an embarrassing photo on your story and keep it up for 1 hour. Tap 'I posted it' to continue.";
 
-export default function FindJai({ onComplete }) {
+export default function FindJay({ onComplete }) {
   const [phase, setPhase] = useState("intro"); // intro | playing | won | dare
-  const [jaiPosition, setJaiPosition] = useState(1); // 0, 1, 2
+  const [jaiPosition, setJayPosition] = useState(1); // 0, 1, 2
   const [shuffling, setShuffling] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [selectedPillar, setSelectedPillar] = useState(null);
   const [timeLeft, setTimeLeft] = useState(30);
-  const [round, setRound] = useState(1);
+  const round = 1;
   const timerRef = useRef(null);
   const shuffleRef = useRef(null);
 
@@ -32,7 +32,7 @@ export default function FindJai({ onComplete }) {
   const startGame = () => {
     setPhase("playing");
     setTimeLeft(30);
-    setJaiPosition(Math.floor(Math.random() * 3));
+    setJayPosition(Math.floor(Math.random() * 3));
     setShuffling(false);
     setRevealed(false);
     setSelectedPillar(null);
@@ -44,7 +44,7 @@ export default function FindJai({ onComplete }) {
     const maxShuffles = 6 + Math.floor(Math.random() * 4);
     shuffleRef.current = setInterval(() => {
       setShuffling(true);
-      setJaiPosition((prev) => {
+      setJayPosition((prev) => {
         const options = [0, 1, 2].filter((p) => p !== prev);
         return options[Math.floor(Math.random() * options.length)];
       });
@@ -63,16 +63,11 @@ export default function FindJai({ onComplete }) {
     setRevealed(true);
     if (index === jaiPosition) {
       setTimeout(() => {
-        if (round >= 2) {
-          setPhase("won");
-          setTimeout(() => onComplete(), 1200);
-        } else {
-          setRound((r) => r + 1);
-          setTimeout(() => startGame(), 1500);
-        }
+        setPhase("won");
+        setTimeout(() => onComplete(), 2200);
       }, 1000);
     } else {
-      setTimeout(() => setPhase("dare"), 1000);
+      setTimeout(() => setPhase("dare"), 2200);
     }
   };
 
@@ -84,21 +79,21 @@ export default function FindJai({ onComplete }) {
 
   const getPillarLabel = (index) => {
     if (!revealed) return "???";
-    if (index === jaiPosition) return "JAI!";
+    if (index === jaiPosition) return "JAY!";
     return "empty";
   };
 
   return (
     <div className="space-y-4 font-mono">
       <div className="text-center space-y-1">
-        <p className="text-red-400 text-xs uppercase tracking-widest">Find Jai</p>
-        <p className="text-green-700 text-xs">He's hiding behind one of the pillars. Track him.</p>
+        <p className="text-red-400 text-xs uppercase tracking-widest">Find Jay</p>
+        <p className="text-green-700 text-xs">CCTV is unstable. Track the runner before he disappears again.</p>
       </div>
 
       {phase === "intro" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
           <div className="border border-red-800 rounded p-4 bg-red-950/10 space-y-2">
-            <p className="text-red-300 text-sm">Jai robbed a Sainsbury's and fled to India.</p>
+            <p className="text-red-300 text-sm">Jay robbed a Sainsbury's and fled to India.</p>
             <p className="text-red-300 text-sm">Before he left — he hid behind 3 pillars.</p>
             <p className="text-amber-400 text-sm font-bold">Find him in 30 seconds or face the consequences.</p>
           </div>
@@ -113,19 +108,38 @@ export default function FindJai({ onComplete }) {
 
       {phase === "playing" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-          {/* Timer */}
-          <div className="flex items-center justify-between">
-            <span className="text-green-700 text-xs">Round {round}/2</span>
-            <div className={`text-2xl font-bold ${timeLeft <= 10 ? "text-red-400 animate-pulse" : "text-amber-400"}`}>
-              {timeLeft}s
+          <div className="border border-green-900 rounded bg-black/50 p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-green-700 text-xs">One chance</span>
+              <div className={`text-2xl font-bold ${timeLeft <= 10 ? "text-red-400 animate-pulse" : "text-amber-400"}`}>
+                {timeLeft}s
+              </div>
+              <span className="text-green-700 text-xs">
+                {shuffling ? "CCTV scrambling..." : "pick now"}
+              </span>
             </div>
-            <span className="text-green-700 text-xs">
-              {shuffling ? "shuffling..." : "pick now"}
-            </span>
+
+            <div className="h-2 bg-green-950 rounded overflow-hidden">
+              <motion.div
+                className="h-full bg-green-500"
+                animate={{ width: `${(timeLeft / 30) * 100}%` }}
+              />
+            </div>
+
+            <p className="text-green-800 text-xs text-center">
+              {shuffling ? "Suspect movement detected behind pillars..." : "Signal locked. Choose a pillar."}
+            </p>
           </div>
 
           {/* Pillars */}
-          <div className="flex justify-around items-end py-4">
+          <div className="relative border border-green-900 rounded p-4 bg-black/40 overflow-hidden">
+            <motion.div
+              animate={{ opacity: [0.12, 0.32, 0.12] }}
+              transition={{ repeat: Infinity, duration: 1.4 }}
+              className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(34,197,94,0.16)_50%)] bg-[length:100%_6px] pointer-events-none"
+            />
+
+            <div className="flex justify-around items-end py-4 relative z-10">
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
@@ -135,13 +149,15 @@ export default function FindJai({ onComplete }) {
                 onClick={() => handlePillarTap(i)}
               >
                 <AnimatePresence>
-                  {revealed && i === jaiPosition && (
+                  {revealed && i === selectedPillar && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-xs text-red-400 font-bold"
+                      className={`text-xs font-bold ${
+                        selectedPillar === jaiPosition ? "text-green-400" : "text-red-400"
+                      }`}
                     >
-                      GOT HIM!
+                      {selectedPillar === jaiPosition ? "GOT HIM!" : "WRONG ONE"}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -163,6 +179,7 @@ export default function FindJai({ onComplete }) {
                 </div>
               </motion.div>
             ))}
+            </div>
           </div>
 
           {revealed && selectedPillar === jaiPosition && (
@@ -171,7 +188,7 @@ export default function FindJai({ onComplete }) {
               animate={{ opacity: 1 }}
               className="border border-green-500 rounded p-3 bg-green-950/20 text-center"
             >
-              <p className="text-green-400 text-sm">✓ Found him. Round {round} complete.</p>
+              <p className="text-green-400 text-sm">✓ Found him. Somehow.</p>
             </motion.div>
           )}
 
@@ -193,7 +210,7 @@ export default function FindJai({ onComplete }) {
           animate={{ opacity: 1, scale: 1 }}
           className="border border-green-500 rounded p-4 bg-green-950/20 text-center space-y-2"
         >
-          <p className="text-green-400 text-lg font-bold">✓ Jai Caught</p>
+          <p className="text-green-400 text-lg font-bold">✓ Jay Caught</p>
           <p className="text-green-600 text-xs">Unlike real life.</p>
         </motion.div>
       )}
@@ -209,13 +226,10 @@ export default function FindJai({ onComplete }) {
             <p className="text-red-300 text-sm leading-relaxed">{DARE_TEXT}</p>
           </div>
           <button
-            onClick={() => {
-              setPhase("won");
-              setTimeout(() => onComplete(), 800);
-            }}
+            onClick={() => onComplete()}
             className="w-full border border-red-500 text-red-400 py-3 rounded hover:bg-red-950/30 transition text-sm tracking-wider"
           >
-            [ I POSTED IT ]
+            [ I POSTED IT — CONTINUE ]
           </button>
         </motion.div>
       )}

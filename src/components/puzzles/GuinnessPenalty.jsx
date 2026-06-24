@@ -1,19 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PhotoCapture from "../PhotoCapture";
+
+const ANALYSIS_STEPS = [
+  "Uploading Guinness proof...",
+  "Detecting glass edges...",
+  "Measuring foam distribution...",
+  "Checking G-line alignment...",
+  "Comparing pint symmetry...",
+  "Running Pinto tolerance model...",
+  "Final verdict loading...",
+];
 
 export default function GuinnessPenalty({ onComplete }) {
   const [step, setStep] = useState("photo");
   const [photo, setPhoto] = useState(null);
+  const [analysisIndex, setAnalysisIndex] = useState(0);
+  const [score, setScore] = useState(null);
 
   const handlePhoto = (img) => {
     setPhoto(img);
     setStep("analysing");
-
-    setTimeout(() => {
-      setStep("failed");
-    }, 2500);
+    setAnalysisIndex(0);
+    setScore(null);
   };
+
+  useEffect(() => {
+    if (step !== "analysing") return;
+
+    if (analysisIndex < ANALYSIS_STEPS.length - 1) {
+      const timer = setTimeout(() => {
+        setAnalysisIndex((prev) => prev + 1);
+      }, 700);
+
+      return () => clearTimeout(timer);
+    }
+
+    const verdictTimer = setTimeout(() => {
+      setScore(Math.floor(Math.random() * 18) + 31); // 31–48%
+      setStep("failed");
+    }, 900);
+
+    return () => clearTimeout(verdictTimer);
+  }, [step, analysisIndex]);
 
   return (
     <div className="space-y-4 font-mono">
@@ -33,6 +62,9 @@ export default function GuinnessPenalty({ onComplete }) {
               <p className="text-green-300 text-sm">
                 Split the G perfectly between two glasses. Take a photo for proof.
               </p>
+              <p className="text-green-700 text-xs mt-2">
+                Warning: the analyser is extremely strict and emotionally biased.
+              </p>
             </div>
 
             <PhotoCapture onComplete={handlePhoto} />
@@ -45,24 +77,48 @@ export default function GuinnessPenalty({ onComplete }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="text-center space-y-3 py-8"
+            className="space-y-4 py-4"
           >
             {photo && (
-              <img
-                src={photo}
-                alt="Guinness proof"
-                className="w-full max-h-56 object-cover rounded border border-green-900"
-              />
+              <div className="relative">
+                <img
+                  src={photo}
+                  alt="Guinness proof"
+                  className="w-full max-h-64 object-cover rounded border border-green-900 opacity-80"
+                />
+
+                <motion.div
+                  initial={{ top: 0 }}
+                  animate={{ top: ["0%", "98%", "0%"] }}
+                  transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
+                  className="absolute left-0 right-0 h-1 bg-green-400/80 shadow-[0_0_16px_rgba(74,222,128,0.95)]"
+                />
+              </div>
             )}
 
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-              className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full mx-auto"
-            />
+            <div className="border border-green-900 rounded p-3 bg-black/40 space-y-2">
+              <p className="text-green-400 text-xs uppercase tracking-widest">
+                G-Balance Analysis
+              </p>
 
-            <p className="text-green-400 text-sm">Running G balance analyser...</p>
-            <p className="text-green-700 text-xs">Checking foam ratio, glass symmetry, and Pinto tolerance...</p>
+              <div className="w-full h-2 bg-green-950 rounded overflow-hidden">
+                <motion.div
+                  initial={{ width: "0%" }}
+                  animate={{
+                    width: `${((analysisIndex + 1) / ANALYSIS_STEPS.length) * 100}%`,
+                  }}
+                  className="h-full bg-green-500"
+                />
+              </div>
+
+              <p className="text-green-300 text-sm">
+                {ANALYSIS_STEPS[analysisIndex]}
+              </p>
+
+              <p className="text-green-700 text-xs">
+                Confidence: {Math.min(99, 42 + analysisIndex * 9)}%
+              </p>
+            </div>
           </motion.div>
         )}
 
@@ -73,6 +129,14 @@ export default function GuinnessPenalty({ onComplete }) {
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-4"
           >
+            {photo && (
+              <img
+                src={photo}
+                alt="Failed Guinness proof"
+                className="w-full max-h-56 object-cover rounded border border-red-900 opacity-80"
+              />
+            )}
+
             <div className="border-2 border-red-600 rounded p-4 bg-red-950/20 text-center space-y-2">
               <p className="text-red-400 text-xs uppercase tracking-widest">
                 Challenge Failed
@@ -80,6 +144,11 @@ export default function GuinnessPenalty({ onComplete }) {
               <p className="text-red-300 text-sm">
                 Guinness distribution unacceptable.
               </p>
+              {score && (
+                <p className="text-red-500 text-xs">
+                  Certified G-balance score: {score}%
+                </p>
+              )}
               <p className="text-amber-400 text-sm font-bold">
                 Penalty: buy a round of shots.
               </p>

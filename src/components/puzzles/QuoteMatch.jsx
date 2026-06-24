@@ -113,14 +113,39 @@ export default function QuoteMatch({ onComplete }) {
 
       {phase === "playing" && (
         <div className="space-y-3">
-          <div className="flex justify-between text-xs text-amber-800 px-1">
-            <span>{current + 1} / {QUOTES.length}</span>
-            <span>Score: {score}</span>
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs text-amber-800 px-1">
+              <span>Question {current + 1} / {QUOTES.length}</span>
+              <span>Score: {score}</span>
+            </div>
+            <div className="h-2 bg-amber-950 rounded overflow-hidden border border-amber-900/60">
+              <motion.div
+                className="h-full bg-amber-500"
+                animate={{ width: `${((current + 1) / QUOTES.length) * 100}%` }}
+              />
+            </div>
           </div>
 
-          <div className="border border-amber-900/50 rounded p-4 bg-black/30 text-center min-h-16 flex items-center justify-center">
-            <p className="text-amber-300 text-sm italic">"{q.quote}"</p>
+          <div className="border border-amber-900/50 rounded p-5 bg-black/40 text-center min-h-24 flex flex-col items-center justify-center space-y-2">
+            <p className="text-amber-700 text-[10px] uppercase tracking-widest">
+              Incoming quote
+            </p>
+            <p className="text-amber-300 text-base italic leading-relaxed">"{q.quote}"</p>
           </div>
+
+          {feedback && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`border rounded p-2 text-center text-xs font-bold tracking-widest ${
+                feedback === "correct"
+                  ? "border-green-500 text-green-400 bg-green-950/20"
+                  : "border-red-500 text-red-400 bg-red-950/20"
+              }`}
+            >
+              {feedback === "correct" ? "✓ CORRECT" : `✕ WRONG — IT WAS ${q.answer.toUpperCase()}`}
+            </motion.div>
+          )}
 
           <div className="grid grid-cols-2 gap-2">
             {q.options.map((opt) => {
