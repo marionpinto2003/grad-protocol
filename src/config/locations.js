@@ -4,12 +4,36 @@ export const PLAYERS = {
     codename: "GUPTA",
     fullName: "Aryan Gupta",
     color: "green",
+    finalMessage: `Gupta,
+
+Lowkey wish you didn’t come back, because saying goodbye a second time will be even harder. Nonetheless, I am very grateful that you did — at least I got my dress, and more importantly, the additional time and memories.
+
+Thank you for being someone I could always go to. I’ve never had to stress knowing you and Gohil were always around to help, whether it was an assignment, help picking out a gift, or just random life advice.
+
+Thank you for adding so much joy and fun to my very boring life. London definitely isn’t the same without you.
+
+I will miss you a lot, fav. I wish only the best for you <3
+
+Lots of love,
+Pinto`,
   },
   gohil: {
     id: "gohil",
     codename: "GOHIL",
     fullName: "Rudra Gohil",
     color: "amber",
+    finalMessage: `Gohil,
+
+From the moment I met you, you’ve been expanding my world. From our first day at the Tower of London to our last day at London Zoo, you’ve shown me so many places, experiences, and little corners of London I never would have discovered on my own.
+
+Thank you for making my world bigger, one step at a time. You’ve somehow managed to leave your mark on every part of this city, and now everywhere I go reminds me of a memory with you.
+
+Thank you for all the help, support, laughs, kisses, but most of all, thank you for the cheese naan.
+
+I love you so much, and I honestly don’t think Richmond would have been the same without you. As grateful as I am for my degree, you are without a doubt the best thing I got from Richmond.
+
+Lots of love,
+Pinto`,
   },
 };
 
