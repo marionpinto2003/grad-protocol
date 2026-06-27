@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { loadState, completeStage, resetState } from "./utils/storage";
 import { STAGES, PLAYERS } from "./config/locations";
 import StageView from "./components/StageView";
-import MissionProgress from "./components/MissionProgress";
+import MissionMap from "./components/MissionMap";
 import PhotoGallery from "./components/PhotoGallery";
 
 const SITE_PASSWORD = import.meta.env.VITE_SITE_PASSWORD;
@@ -30,7 +30,7 @@ function PasswordGate({ onUnlock }) {
         className="w-full max-w-sm space-y-6 text-center"
       >
         <div className="space-y-1">
-          <p className="text-green-500 text-xs uppercase tracking-widest">CLASSIFIED SYSTEM</p>
+          <p className="text-green-600 text-xs uppercase tracking-widest">CLASSIFIED SYSTEM</p>
           <p className="text-green-300 text-lg font-bold">THE GRAD PROTOCOL</p>
           <p className="text-green-800 text-xs">Authorised personnel only.</p>
         </div>
@@ -43,13 +43,13 @@ function PasswordGate({ onUnlock }) {
             onKeyDown={e => e.key === "Enter" && attempt()}
             placeholder="Enter access code"
             className={`w-full bg-black/40 border rounded px-4 py-3 text-green-300 text-sm text-center tracking-widest placeholder-green-900 outline-none transition ${
-              error ? "border-red-500" : "border-green-900 focus:border-green-600"
+              error ? "border-red-500" : "border-green-900 focus:border-green-400"
             }`}
           />
           {error && <p className="text-red-500 text-xs">Access denied.</p>}
           <button
             onClick={attempt}
-            className="w-full border border-green-700 text-green-400 py-3 rounded hover:bg-green-950/30 transition text-sm tracking-wider"
+            className="w-full border border-green-800 text-green-400 py-3 rounded hover:bg-green-950/30 transition text-sm tracking-wider"
           >
             [ AUTHENTICATE ]
           </button>
@@ -91,6 +91,20 @@ export default function App() {
     }
   };
 
+  const handleBack = () => {
+    if (showProgress) {
+      setShowProgress(false);
+      return;
+    }
+
+    if (finalScreen) {
+      setFinalScreen(false);
+      return;
+    }
+
+    setPlayer(null);
+  };
+
   if (!unlocked) {
     return <PasswordGate onUnlock={() => { sessionStorage.setItem("grad_auth", "1"); setUnlocked(true); }} />;
   }
@@ -115,11 +129,18 @@ export default function App() {
 
       <header className="border-b border-green-900 px-4 py-3 flex items-center justify-between relative z-10">
         <div>
+          <button
+            onClick={handleBack}
+            className="mb-2 border border-green-900 text-green-700 text-xs px-3 py-1.5 rounded hover:border-green-700 hover:text-green-500 transition"
+          >
+            ← BACK
+          </button>
+
           <div className="flex items-center gap-2">
             <motion.span
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
-              className={`text-xs ${player.id === "gupta" ? "text-green-500" : "text-amber-500"}`}
+              className={`text-xs ${player.id === "gupta" ? "text-green-600" : "text-amber-500"}`}
             >
               ●
             </motion.span>
@@ -134,13 +155,13 @@ export default function App() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowProgress(!showProgress)}
-            className="border border-green-900 text-green-700 text-xs px-3 py-1.5 rounded hover:border-green-700 hover:text-green-500 transition"
+            className="border border-green-900 text-green-700 text-xs px-3 py-1.5 rounded hover:border-green-800 hover:text-green-600 transition"
           >
             {showProgress ? "[ HIDE ]" : "[ MAP ]"}
           </button>
           <button
             onClick={() => setPlayer(null)}
-            className="border border-green-900 text-green-700 text-xs px-2 py-1.5 rounded hover:border-green-700 hover:text-green-500 transition"
+            className="border border-green-900 text-green-700 text-xs px-2 py-1.5 rounded hover:border-green-800 hover:text-green-600 transition"
           >
             ⇄
           </button>
@@ -162,7 +183,7 @@ export default function App() {
               exit={{ opacity: 0, height: 0 }}
               className="border border-green-900 rounded-lg p-4 bg-black/40 overflow-hidden"
             >
-              <MissionProgress
+              <MissionMap
                 completedStages={appState.completedStages}
                 currentStage={appState.currentStage}
                 player={player}
@@ -239,11 +260,11 @@ function PlayerSelect({ onSelect }) {
               onClick={() => onSelect(p)}
               className={`w-full border rounded-lg px-6 py-4 text-left transition space-y-1 ${
                 p.id === "gupta"
-                  ? "border-green-800 hover:border-green-500 hover:bg-green-950/30"
-                  : "border-amber-900 hover:border-amber-500 hover:bg-amber-950/20"
+                  ? "border-[#d71920] hover:border-[#cba135] hover:bg-[#d71920]/20"
+                  : "border-[#1c3f94] hover:border-[#87ceeb] hover:bg-[#1c3f94]/25"
               }`}
             >
-              <p className={`text-sm font-bold tracking-widest ${p.id === "gupta" ? "text-green-400" : "text-amber-400"}`}>
+              <p className={`text-sm font-bold tracking-widest ${p.id === "gupta" ? "text-[#d71920]" : "text-[#d4af37]"}`}>
                 OPERATIVE {p.codename}
               </p>
               <p className="text-green-700 text-xs">{p.fullName}</p>
@@ -282,7 +303,7 @@ function FinalScreen({ player, startedAt }) {
           PROTOCOL COMPLETE
         </p>
         <h1 className="text-white text-2xl font-bold">Mission Accomplished</h1>
-        <p className="text-green-500 text-sm mt-2">
+        <p className="text-green-600 text-sm mt-2">
           All 9 stages cleared, Operative {player.codename}.
         </p>
       </div>
@@ -296,15 +317,7 @@ function FinalScreen({ player, startedAt }) {
           </p>
         </div>
       )}
-      <div className="border border-amber-600 rounded-lg p-4 bg-amber-950/20 space-y-2">
-        <p className="text-amber-400 text-xs tracking-widest uppercase">
-          ██ CLASSIFIED REWARD ██
-        </p>
-        <p className="text-white text-lg font-bold">2 × Thorpe Park Tickets</p>
-        <p className="text-amber-300 text-xs">
-          Redeemable immediately. Marion's orders.
-        </p>
-        </div>
+
       <PhotoGallery player={player} />
     </motion.div>
   );

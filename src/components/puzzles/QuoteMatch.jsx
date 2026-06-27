@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const QUOTES = [
@@ -46,6 +46,10 @@ const QUOTES = [
 
 const PASS_SCORE = 6;
 
+function shuffleOptions(options) {
+  return [...options].sort(() => Math.random() - 0.5);
+}
+
 export default function QuoteMatch({ onComplete }) {
   const [phase, setPhase] = useState("intro");
   const [current, setCurrent] = useState(0);
@@ -53,10 +57,19 @@ export default function QuoteMatch({ onComplete }) {
   const [selected, setSelected] = useState(null);
   const [feedback, setFeedback] = useState(null); // "correct" | "wrong"
 
+  const shuffledQuotes = useMemo(() => {
+    return QUOTES.map((quote) => ({
+      ...quote,
+      options: shuffleOptions(quote.options),
+    }));
+  }, []);
+
+  const q = shuffledQuotes[current];
+
   const handleAnswer = (option) => {
     if (feedback) return;
     setSelected(option);
-    const correct = option === QUOTES[current].answer;
+    const correct = option === q.answer;
     setFeedback(correct ? "correct" : "wrong");
 
     setTimeout(() => {
@@ -65,7 +78,7 @@ export default function QuoteMatch({ onComplete }) {
       setFeedback(null);
       setSelected(null);
 
-      if (current + 1 >= QUOTES.length) {
+      if (current + 1 >= shuffledQuotes.length) {
         if (newScore >= PASS_SCORE) {
           setPhase("won");
           setTimeout(() => onComplete(), 1400);
@@ -85,8 +98,6 @@ export default function QuoteMatch({ onComplete }) {
     setFeedback(null);
     setPhase("playing");
   };
-
-  const q = QUOTES[current];
 
   return (
     <div className="space-y-3 font-mono">
@@ -115,13 +126,13 @@ export default function QuoteMatch({ onComplete }) {
         <div className="space-y-3">
           <div className="space-y-2">
             <div className="flex justify-between text-xs text-amber-800 px-1">
-              <span>Question {current + 1} / {QUOTES.length}</span>
+              <span>Question {current + 1} / {shuffledQuotes.length}</span>
               <span>Score: {score}</span>
             </div>
             <div className="h-2 bg-amber-950 rounded overflow-hidden border border-amber-900/60">
               <motion.div
                 className="h-full bg-amber-500"
-                animate={{ width: `${((current + 1) / QUOTES.length) * 100}%` }}
+                animate={{ width: `${((current + 1) / shuffledQuotes.length) * 100}%` }}
               />
             </div>
           </div>

@@ -3,7 +3,7 @@ export const PLAYERS = {
     id: "gupta",
     codename: "GUPTA",
     fullName: "Aryan Gupta",
-    color: "green",
+    color: "rcb",
     finalMessage: `Gupta,
 
 Lowkey wish you didn’t come back, because saying goodbye a second time will be even harder. Nonetheless, I am very grateful that you did — at least I got my dress, and more importantly, the additional time and memories.
@@ -21,7 +21,7 @@ Pinto`,
     id: "gohil",
     codename: "GOHIL",
     fullName: "Rudra Gohil",
-    color: "amber",
+    color: "gt",
     finalMessage: `Gohil,
 
 From the moment I met you, you’ve been expanding my world. From our first day at the Tower of London to our last day at London Zoo, you’ve shown me so many places, experiences, and little corners of London I never would have discovered on my own.
@@ -275,7 +275,7 @@ export const STAGES = [
       ],
       missionBrief: "Teri kitchen. Tera chulha. Paneer butter masala — perfect bana tha. TMKOC on in the background, COD baad mein, aur raat kab gayi pata nahi. TW7 6GH. Ek baar aur.",
       task: "Photo outside. Then prank call Rachit — on speaker, together.",
-      clue: "Classrooms, cardboard boxes, Monster cans, security guards with questions, Quant chaos, and the award David still owes you. Time to return to the campus that somehow survived all of it. Richmond American University London. Building 12.",
+      clue: "Classrooms, cardboard boxes, Starbucks coffees, security guards with questions, Quant chaos, and the award David still owes you. Time to return to the campus that somehow survived all of it. Richmond American University London. Building 12.",
     },
   },
   {
@@ -305,10 +305,10 @@ export const STAGES = [
       missionTitle: "The Legend of Building 12",
       terminalLines: [
         "RAUL Building 12 — Richmond American University London...",
-        "Four years of BCC Comp Sci...",
+        "Four years of BSC Comp Sci...",
         "David still owes you that award.",
       ],
-      missionBrief: "There were classrooms in this building that saw more action than the lectures ever did. There was also a cardboard box, a case of Monster, and a security guard who had questions. President of Quant. David never gave you the award. Everyone knows.",
+      missionBrief: "There were classrooms in this building that saw more action than the lectures ever did. There was also a cardboard box, a Starbucks coffee, and a security guard who had questions. President of Quant. David never gave you the award. Everyone knows.",
       task: "Find one of the classrooms. You know what you did in them. Complete the classroom challenge — then take a photo. Hold a fake award — claim what David never gave you.",
       wordHalf: "MATE",
       clue: "Four years, one final move. In chess, this is how the game ends when the king is trapped. Your half is the last half of that word — also what Gupta somehow became.",

@@ -87,6 +87,12 @@ export default function StageView({ stage, player, onComplete }) {
     }
   };
 
+  const handleStageBack = () => {
+    if (phase === "wordUnlock") {
+      setPhase("clue");
+    }
+  };
+
   // Determine which puzzle to show for this stage + player
   const getPuzzle = () => {
     const id = stage["id"];
@@ -108,19 +114,26 @@ export default function StageView({ stage, player, onComplete }) {
 
   return (
     <div className="space-y-4 font-mono">
-      <div className="border-b border-green-900 pb-3">
+      <div className="border border-green-900/70 rounded-lg p-4 bg-black/40 shadow-[0_0_18px_rgba(34,197,94,0.08)]">
         <p className="text-green-600 text-xs tracking-widest uppercase mb-1">
-          {stage.codename}
+          ACTIVE OPERATION · {stage.codename}
         </p>
         <h2 className={`text-xl font-bold ${player["id"] === "gupta" ? "text-green-400" : "text-amber-400"}`}>
-          {stage.label}
+          {playerData.missionTitle || stage.label}
         </h2>
-        {playerData.missionTitle && (
-          <p className="text-green-600 text-xs mt-1 italic">
-            "{playerData.missionTitle}"
-          </p>
-        )}
+        <p className="text-green-800 text-xs mt-2 uppercase tracking-widest">
+          Operative {player.codename} · Field mission active
+        </p>
       </div>
+
+      {phase === "wordUnlock" && (
+        <button
+          onClick={handleStageBack}
+          className="border border-green-900 text-green-700 text-xs px-3 py-1.5 rounded hover:border-green-700 hover:text-green-500 transition"
+        >
+          ← BACK TO CLUE
+        </button>
+      )}
 
       {phase === "booting" && (
         <div className="bg-black/30 border border-green-900 rounded p-4 min-h-[120px]">
@@ -129,6 +142,7 @@ export default function StageView({ stage, player, onComplete }) {
               `Initializing ${stage.codename}...`,
               ...playerData.terminalLines,
               "Awaiting operative confirmation...",
+              "Stand by for objective package...",
             ]}
             onComplete={handleTypingDone}
             speed={30}
@@ -144,8 +158,8 @@ export default function StageView({ stage, player, onComplete }) {
           className="space-y-3"
         >
           <div className="border border-amber-900/50 rounded p-4 bg-amber-950/10">
-            <p className="text-amber-600 text-xs uppercase tracking-widest mb-3">
-              Decrypt to proceed
+            <p className="text-amber-400 text-xs uppercase tracking-widest mb-3">
+              Pre-mission decryption required
             </p>
             <CaesarCipher onComplete={() => setPhase("scanning")} />
           </div>
@@ -163,7 +177,7 @@ export default function StageView({ stage, player, onComplete }) {
               <>
                 <div className="bg-black/20 border border-green-900/50 rounded p-3">
                   <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
-                    Mission Brief
+                    Mission Briefing
                   </p>
                   <p className="text-green-300 text-sm leading-relaxed">
                     {playerData.missionBrief}
@@ -191,17 +205,17 @@ export default function StageView({ stage, player, onComplete }) {
                 animate={{ opacity: 1, y: 0 }}
                 className="space-y-3"
               >
-                <div className="border border-green-600 rounded px-3 py-2 bg-green-950/20 text-center">
+                <div className="border border-green-400 rounded px-3 py-2 bg-green-950/20 text-center">
                   <p className="text-green-400 text-xs tracking-widest uppercase">
-                    ✓ Location Confirmed
+                    ✓ GPS Lock Confirmed
                   </p>
                 </div>
 
                 {/* Puzzle first if stage has one */}
                 {hasPuzzle && !puzzleDone && (
                   <div className="border border-amber-900/50 rounded p-4 bg-amber-950/10">
-                    <p className="text-amber-600 text-xs uppercase tracking-widest mb-3">
-                      Complete the challenge first
+                    <p className="text-amber-400 text-xs uppercase tracking-widest mb-3">
+                      Primary Challenge Required
                     </p>
                     {puzzle}
                   </div>
@@ -212,7 +226,7 @@ export default function StageView({ stage, player, onComplete }) {
                   <>
                   <div className="bg-black/20 border border-green-900/50 rounded p-3">
                     <p className="text-green-600 text-xs uppercase tracking-widest mb-1">
-                      Your Task
+                      Field Objective
                     </p>
                     <p className="text-green-300 text-sm leading-relaxed">
                       {playerData.task}
@@ -222,11 +236,11 @@ export default function StageView({ stage, player, onComplete }) {
                       <PhotoCapture onComplete={(photo) => markTaskComplete(photo)} />
                     )}
 
-                    {stage.validation === "arrest" && player["id"] === "gohil" && (
-                      <MugshotGenerator onComplete={(photo) => markTaskComplete(photo)} />
+                    {stage.validation === "arrest" && player["id"] === "gupta" && (
+                      <BailCodeBrief onComplete={() => markTaskComplete()} />
                     )}
 
-                    {stage.validation === "arrest" && player["id"] === "gupta" && (
+                    {stage.validation === "arrest" && player["id"] === "gohil" && (
                       <BailAuth onComplete={() => markTaskComplete()} stage={stage} />
                     )}
 
@@ -321,13 +335,40 @@ function WordUnlock({ wordInput, setWordInput, wordError, onSubmit, player }) {
         onClick={onSubmit}
         className={`w-full border py-3 rounded transition text-sm tracking-wider ${
           isGupta
-            ? "border-green-600 text-green-400 hover:bg-green-950/40"
+            ? "border-green-400 text-green-400 hover:bg-green-950/40"
             : "border-amber-600 text-amber-400 hover:bg-amber-950/40"
         }`}
       >
         [ SUBMIT KEY ]
       </button>
     </motion.div>
+  );
+}
+
+function BailCodeBrief({ onComplete }) {
+  const bailCode = "230425";
+
+  return (
+    <div className="space-y-4">
+      <div className="border border-green-500 rounded p-4 bg-green-950/20 text-center">
+        <p className="text-green-600 text-xs uppercase tracking-widest mb-2">
+          Bail Code Recovered
+        </p>
+        <p className="text-green-300 text-sm mb-3">
+          Send this code to Gohil. He needs it to get released.
+        </p>
+        <p className="text-green-400 text-3xl font-bold tracking-[0.35em]">
+          {bailCode}
+        </p>
+      </div>
+
+      <button
+        onClick={onComplete}
+        className="w-full border border-green-600 text-green-400 py-3 rounded hover:bg-green-950/40 transition text-sm tracking-wider"
+      >
+        [ CODE SENT TO GOHIL ]
+      </button>
+    </div>
   );
 }
 
@@ -354,9 +395,9 @@ function BailAuth({ onComplete, stage }) {
       {status === "waiting" && (
         <div className="space-y-3">
           <div className="border border-amber-800 rounded p-3 bg-amber-950/20 text-center">
-            <p className="text-amber-600 text-xs uppercase tracking-widest mb-1">Bail Reference</p>
+            <p className="text-amber-400 text-xs uppercase tracking-widest mb-1">Bail Reference</p>
             <p className="text-amber-400 text-2xl font-bold tracking-widest">{bailCode}</p>
-            <p className="text-amber-700 text-xs mt-1">Show this to GOHIL</p>
+            <p className="text-amber-500 text-xs mt-1">Show this to GOHIL</p>
           </div>
           <button
             onClick={authoriseBail}
@@ -377,7 +418,7 @@ function BailAuth({ onComplete, stage }) {
         </div>
       )}
       {status === "authorised" && (
-        <div className="border border-green-600 rounded p-3 bg-green-950/20 text-center">
+        <div className="border border-green-400 rounded p-3 bg-green-950/20 text-center">
           <p className="text-green-400 text-sm">✓ Bail Authorised — GOHIL Released</p>
         </div>
       )}
@@ -414,7 +455,7 @@ function PasscodeEntry({ correctCode, onComplete }) {
       {error && <p className="text-red-400 text-xs">INVALID — ACCESS DENIED</p>}
       <button
         onClick={handleSubmit}
-        className="w-full border border-green-600 text-green-400 py-2 rounded hover:bg-green-950/40 transition text-sm tracking-wider"
+        className="w-full border border-green-400 text-green-400 py-2 rounded hover:bg-green-950/40 transition text-sm tracking-wider"
       >
         [ SUBMIT ]
       </button>

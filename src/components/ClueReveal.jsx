@@ -19,14 +19,14 @@ export default function ClueReveal({
         </div>
       )}
 
-      <div className="border border-green-600 rounded px-3 py-2 bg-green-950/20 text-center">
+      <div className="border border-green-400 rounded px-3 py-2 bg-green-950/20 text-center">
         <p className="text-green-400 text-xs tracking-widest uppercase">
           ✓ Clue Unlocked
         </p>
       </div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
-        <div className="border border-amber-700 rounded p-4 bg-amber-950/10">
+        <div className="border border-amber-800 rounded p-4 bg-amber-950/10">
           <p className="text-amber-300 text-sm leading-relaxed italic">
             "{clue}"
           </p>

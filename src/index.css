@@ -25,3 +25,76 @@
     border-radius: 2px;
   }
 }
+
+/* Mission Map */
+.mission-map-card {
+  margin-top: 1.5rem;
+}
+
+.mission-map-header {
+  margin-bottom: 0.75rem;
+}
+
+.mission-map {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+}
+
+.mission-map-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.mission-map-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+}
+
+.mission-map-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(120, 255, 160, 0.45);
+  box-shadow: 0 0 16px rgba(90, 255, 140, 0.2);
+}
+
+.mission-map-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: rgba(150, 255, 180, 0.9);
+}
+
+.mission-map-label.top {
+  bottom: 110%;
+}
+
+.mission-map-label.bottom {
+  top: 110%;
+}
+
+.mission-map-pin.current .mission-map-icon {
+  border-color: rgba(120, 255, 160, 1);
+  box-shadow: 0 0 22px rgba(90, 255, 140, 0.45);
+}
+
+.mission-map-pin.completed .mission-map-icon {
+  opacity: 0.95;
+}
+
+.mission-map-pin.locked {
+  opacity: 0.45;
+}
