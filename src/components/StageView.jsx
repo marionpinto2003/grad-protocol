@@ -118,7 +118,7 @@ export default function StageView({ stage, player, onComplete }) {
         <p className="text-green-600 text-xs tracking-widest uppercase mb-1">
           ACTIVE OPERATION · {stage.codename}
         </p>
-        <h2 className={`text-xl font-bold ${player["id"] === "gupta" ? "text-green-400" : "text-amber-400"}`}>
+        <h2 className={`text-xl font-bold ${player["id"] === "gupta" ? "text-[#d71920]" : "text-[#d4af37]"}`}>
           {playerData.missionTitle || stage.label}
         </h2>
         <p className="text-green-800 text-xs mt-2 uppercase tracking-widest">

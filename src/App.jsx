@@ -140,11 +140,11 @@ export default function App() {
             <motion.span
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
-              className={`text-xs ${player.id === "gupta" ? "text-green-600" : "text-amber-500"}`}
+              className={`text-xs ${player.id === "gupta" ? "text-[#cba135]" : "text-[#87ceeb]"}`}
             >
               ●
             </motion.span>
-            <span className={`text-sm font-bold tracking-widest uppercase ${player.id === "gupta" ? "text-green-400" : "text-amber-400"}`}>
+            <span className={`text-sm font-bold tracking-widest uppercase ${player.id === "gupta" ? "text-[#d71920]" : "text-[#d4af37]"}`}>
               OPERATIVE {player.codename}
             </span>
           </div>

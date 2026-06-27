@@ -1,6 +1,20 @@
 import { motion } from "framer-motion";
 import { STAGES } from "../config/locations";
 
+function getPlayerTheme(playerId) {
+  return playerId === "gupta"
+    ? {
+        border: "border-[#d71920]",
+        heading: "text-[#cba135]",
+        bg: "bg-[#d71920]/10",
+      }
+    : {
+        border: "border-[#1c3f94]",
+        heading: "text-[#d4af37]",
+        bg: "bg-[#1c3f94]/15",
+      };
+}
+
 function safeFileName(value) {
   return value
     .toLowerCase()
@@ -96,6 +110,7 @@ function downloadMessageAsPng(player) {
 }
 
 export default function PhotoGallery({ player }) {
+  const theme = getPlayerTheme(player.id);
   const photos = STAGES.map((stage) => {
     const key = `grad_photo_${player.id}_${stage.id}`;
     const photo = localStorage.getItem(key);
@@ -115,9 +130,9 @@ export default function PhotoGallery({ player }) {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="border border-amber-700 rounded-lg p-4 bg-amber-950/20 space-y-3"
+          className={`border ${theme.border} rounded-lg p-4 ${theme.bg} space-y-3`}
         >
-          <p className="text-amber-400 text-xs uppercase tracking-widest">
+          <p className={`${theme.heading} text-xs uppercase tracking-widest`}>
             Final Transmission
           </p>
 

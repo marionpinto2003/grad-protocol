@@ -16,8 +16,9 @@ const ROUTE_PATH = MAP_POINTS.map((p, i) =>
   `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`
 ).join(" ");
 
-export default function MissionMap({ player, currentStageIndex = 0 }) {
+export default function MissionMap({ player, currentStageIndex = 0, currentStage = 0, completedStages = [] }) {
   const codename = player?.codename || player?.name || "Agent";
+  const activeStageIndex = currentStageIndex || currentStage || 0;
 
   return (
     <section className="mission-map-card">
@@ -90,9 +91,9 @@ export default function MissionMap({ player, currentStageIndex = 0 }) {
         </svg>
 
         {MAP_POINTS.map((point, index) => {
-          const isCompleted = index < currentStageIndex;
-          const isCurrent = index === currentStageIndex;
-          const isLocked = index > currentStageIndex;
+          const isCompleted = completedStages.includes(index) || index < activeStageIndex;
+          const isCurrent = index === activeStageIndex;
+          const isLocked = !isCompleted && !isCurrent;
 
           const label = isLocked ? "???" : isCurrent ? "CURRENT" : point.label;
           const icon = isLocked ? "?" : point.icon;
