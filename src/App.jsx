@@ -85,7 +85,11 @@ export default function App() {
   }, [appState, player]);
 
   const handleReset = () => {
-    if (window.confirm("RESET PROTOCOL? All progress will be lost.")) {
+    const typed = window.prompt(
+      "DANGER: This will erase all saved mission progress and photos for this operative.\n\nType RESET to confirm."
+    );
+
+    if (typed === "RESET") {
       setAppState(resetState(player.id));
       setFinalScreen(false);
     }
@@ -281,15 +285,21 @@ function PlayerSelect({ onSelect }) {
 }
 
 function FinalScreen({ player, startedAt }) {
+  const [showArchive, setShowArchive] = useState(false);
   const elapsed = startedAt
     ? Math.round((Date.now() - startedAt) / 60000)
     : null;
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowArchive(true), 4200);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="border border-amber-600 rounded-lg p-6 bg-black/60 text-center space-y-4"
+      className="border border-amber-600 rounded-lg p-6 bg-black/60 text-center space-y-5"
     >
       <motion.div
         animate={{ scale: [1, 1.05, 1] }}
@@ -298,27 +308,68 @@ function FinalScreen({ player, startedAt }) {
       >
         🎓
       </motion.div>
+
       <div>
         <p className="text-amber-400 text-xs tracking-widest uppercase mb-2">
-          PROTOCOL COMPLETE
+          FINAL DEBRIEF
         </p>
         <h1 className="text-white text-2xl font-bold">Mission Accomplished</h1>
         <p className="text-green-600 text-sm mt-2">
           All 9 stages cleared, Operative {player.codename}.
         </p>
       </div>
+
+      <div className="border border-green-900 rounded p-4 bg-black/40 text-left font-mono text-xs space-y-2">
+        {[
+          "FINAL KEY ACCEPTED",
+          "CUMLAUDE VERIFIED",
+          "ALL FIELD MISSIONS COMPLETE",
+          "GENERATING MEMORY ARCHIVE...",
+        ].map((line, index) => (
+          <motion.p
+            key={line}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.75 }}
+            className="text-green-400 tracking-widest"
+          >
+            &gt; {line}
+          </motion.p>
+        ))}
+      </div>
+
       {elapsed && (
-        <div className="border border-green-900 rounded px-4 py-2 bg-black/30 inline-block">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 3.2 }}
+          className="border border-green-900 rounded px-4 py-2 bg-black/30 inline-block"
+        >
           <p className="text-green-600 text-xs">Total mission time</p>
           <p className="text-green-400 font-bold">
             {elapsed >= 60
               ? `${Math.floor(elapsed / 60)}h ${elapsed % 60}m`
               : `${elapsed}m`}
           </p>
-        </div>
+        </motion.div>
       )}
 
-      <PhotoGallery player={player} />
+      {showArchive ? (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <PhotoGallery player={player} />
+        </motion.div>
+      ) : (
+        <motion.p
+          animate={{ opacity: [0.35, 1, 0.35] }}
+          transition={{ repeat: Infinity, duration: 1.2 }}
+          className="text-green-700 text-xs uppercase tracking-widest"
+        >
+          Archive loading...
+        </motion.p>
+      )}
     </motion.div>
   );
 }
