@@ -338,70 +338,70 @@ function RouteCard({ stage, player, onComplete }) {
   const routeCards = {
     temple: {
       leg: "LEG 02 · HIGH ROAD SECTOR",
-      title: "J.J. MOON'S UNLOCKED",
-      subtitle: "Blessings secured · First checkpoint open",
+      title: "HIGH ROAD CHECKPOINT UNLOCKED",
+      subtitle: "Blessings secured · First clue active",
       clearance: "Darshan complete. Spiritual clearance approved.",
-      destination: "Make your way to J.J. Moon's on Wembley High Road.",
-      nextLeg: player?.id === "gohil"
-        ? "Date-night tradition. Strongbow Dark Fruit. Sticky-floor diplomacy."
-        : "Guinness protocol. Moon-coded pub. One abandoned Maverick costume."
+      destination: player?.id === "gohil"
+        ? "Decode the moonlit date-night clue. Strongbow Dark Fruit may be involved."
+        : "Decode the moon-coded pub clue. One abandoned Maverick costume may be involved.",
+      nextLeg: "Find the checkpoint. Complete the drink protocol. Await the next route card."
     },
     spoons: {
       leg: "LEG 03 · WEMBLEY FUEL SECTOR",
-      title: "FUNKY CHIPS UNLOCKED",
-      subtitle: "Pub protocol cleared · Emergency food route open",
+      title: "FUEL SECTOR UNLOCKED",
+      subtitle: "Pub protocol cleared · Food clue active",
       clearance: player?.id === "gohil"
         ? "Strongbow protocol complete. Pinto date-spot checkpoint cleared."
         : "Guinness protocol complete. Moon landing successfully survived.",
-      destination: "Proceed to Funky Chips for masala chips, cheese, and Pinto-funded damage control.",
-      nextLeg: "Fuel stop. Photo proof. Then the NAVRATRI key comes online."
+      destination: "Decode the fuel-stop clue: masala chips, cheese, and Pinto-funded damage control.",
+      nextLeg: "Find the checkpoint. Capture proof. Await the combined key."
     },
     wembley: {
       leg: "LEG 04 · ROYALE LEISURE PARK",
       title: "ARCADE SECTOR UNLOCKED",
-      subtitle: "NAVRATRI accepted · Dobble Detour resolved",
-      clearance: "NAVRATRI key accepted. Pinto has approved onward travel.",
-      destination: "Make your way west to Royale Leisure Park, Western Avenue.",
-      nextLeg: "Pool tables. Punch machine. Reclining seats. One skipped lecture that the film absolutely did not deserve."
+      subtitle: "Combined key accepted · Dobble Detour resolved",
+      clearance: "Combined key accepted. Pinto has approved onward travel.",
+      destination: "Decode the arcade-sector clue: pool tables, punch machine, reclining seats, and one skipped lecture that the film absolutely did not deserve.",
+      nextLeg: "Find the checkpoint. Complete the Royale Rumble. Capture proof."
     },
     tenpin: {
       leg: "LEG 05 · BOOKER SECTOR",
-      title: "BOOKER UNLOCKED",
-      subtitle: "Royale Rumble cleared · Emergency supply route open",
+      title: "SUPPLY SECTOR UNLOCKED",
+      subtitle: "Royale Rumble cleared · Emergency supply clue active",
       clearance: "Pool table survived. Punch-machine evidence accepted. Cinema judgement remains pending.",
-      destination: "Proceed to Booker — the only place where one mission can involve both limescale warfare and peanut evidence.",
-      nextLeg: "Nirali has been forgiven. The bathroom evidence has not."
+      destination: "Decode the supply-sector clue: limescale warfare, peanut evidence, and one forgiven suspect.",
+      nextLeg: "Find the checkpoint. Process the domestic evidence."
     },
     booker: {
       leg: "LEG 06 · HAMMERSMITH CASE FILE",
       title: "BAIL PROTOCOL UNLOCKED",
-      subtitle: "Booker evidence cleared · Custody file opening",
+      subtitle: "Evidence cleared · Custody clue active",
       clearance: "Limescale neutralised. Peanut evidence processed. Pinto's domestic incident archive remains classified.",
-      destination: "Proceed to Hammersmith, where one operative enters the system and the other becomes the only hope of release.",
+      destination: "Decode the custody clue: one operative enters the system, the other becomes the only hope of release.",
       nextLeg: "Mugshot first. Bail code second. Paneer cheese butter if both operatives cooperate."
     },
     police: {
       leg: "LEG 07 · TW7 QUOTE PROTOCOL",
-      title: "ISLEWORTH UNLOCKED",
-      subtitle: "Bail operation cleared · Quote archive opening",
+      title: "QUOTE ARCHIVE UNLOCKED",
+      subtitle: "Bail operation cleared · Memory clue active",
       clearance: "Custody resolved. Bail authorised. Both operatives have been released under strict Pinto supervision.",
-      destination: "Proceed to the TW7 memory sector — where too many quotes were said with too much confidence.",
+      destination: "Decode the TW7 memory clue — where too many quotes were said with too much confidence.",
       nextLeg: "Identify the speaker. Survive the allegations. Unlock the archive."
     },
     isleworth: {
       leg: "LEG 08 · RAUL CAMPUS",
-      title: "RAUL UNLOCKED",
-      subtitle: "Quote archive cleared · Campus route open",
+      title: "CAMPUS SECTOR UNLOCKED",
+      subtitle: "Quote archive cleared · University clue active",
       clearance: "Quote protocol accepted. The archive confirms that nobody in this group has ever spoken normally.",
-      destination: "Proceed to RAUL — where the degree became real, the chaos became official, and everyone somehow survived.",
-      nextLeg: "Campus evidence. Final university protocol. One last academic side quest."
+      destination: "Decode the campus clue — where the degree became real, the chaos became official, and everyone somehow survived.",
+      nextLeg: "Find the checkpoint. Complete final university protocol."
     },
     raul: {
       leg: "LEG 09 · FINAL APPROACH",
-      title: "PEMBROKE LODGE UNLOCKED",
-      subtitle: "RAUL protocol cleared · Final route open",
+      title: "FINAL CHECKPOINT UNLOCKED",
+      subtitle: "Campus protocol cleared · Final clue active",
       clearance: "Campus evidence accepted. Degree unlocked. Emotional damage levels rising.",
-      destination: "Proceed to Pembroke Lodge — final checkpoint, final key, final proof that Richmond was never just about the degree.",
+      destination: "Decode the final-location clue — the place where Richmond becomes more than just the degree.",
       nextLeg: "One last unlock. One final debrief. Memory archive generation begins."
     },
   };
