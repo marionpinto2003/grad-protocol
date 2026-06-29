@@ -303,7 +303,7 @@ export const STAGES = [
       missionBrief: "SGA treasurer. SASA president. Always in the hub or the library while Gohil was winning awards he never got handed to him. You lost to Trini at table tennis in this building. Trini, of all people.",
       task: "Find the table tennis table. Win a game. Photo of the win. Gohil must hold a fake award.",
       wordHalf: "CHECK",
-      clue: "Campus cleared, but one memory still has evidence. Remember when you searched every classroom trying to find Gohil, while he and Pinto were hiding in a random one making very questionable academic choices? Your half is the first five letters of the chess warning before the final move.",
+      clue: "Campus cleared, but one memory still has evidence. Remember when you searched every classroom trying to find Gohil, while he and Pinto were hiding in a random one making very questionable academic choices? Think of the warning a king receives when the board starts closing in. Your half comes before the ending.",
     },
     gohil: {
       missionTitle: "The Legend of Building 12",
@@ -315,7 +315,7 @@ export const STAGES = [
       missionBrief: "There were classrooms in this building that saw more action than the lectures ever did. There was also a cardboard box, a Starbucks coffee, and a security guard who had questions. President of Quant. David never gave you the award. Everyone knows.",
       task: "Find one of the classrooms. You know what you did in them. Complete the classroom challenge — then take a photo. Hold a fake award — claim what David never gave you.",
       wordHalf: "MATE",
-      clue: "Four years, one final move. In chess, this is how the game ends when the king is trapped. Your half is the last half of that word — also what Gupta somehow became.",
+      clue: "Four years, one final move. Think of the word that ends the game when the king has nowhere left to run. Your half is the ending — and somehow also what Gupta became.",
     },
   },
   {
@@ -339,7 +339,7 @@ export const STAGES = [
       missionBrief: "The views here are better than any 4K monitor in RAUL. This is it. The last stop. St Paul's on the horizon. Bring the drone. LA is waiting for you, Aryan.",
       task: "Final photo — both of you, together, on the Mound.",
       wordHalf: "CUM",
-      clue: "Final honour unlocked. Your half looks extremely suspicious on its own, but academically it is somehow respectable. First three letters. Do not say it too proudly in public.",
+      clue: "Final honour protocol unlocked. Your fragment looks deeply unserious on its own, but in the right academic context it becomes respectable. Take the opening fragment of the honour Pinto has been flexing all week.",
     },
     gohil: {
       missionTitle: "The Westward Watch",
@@ -351,7 +351,7 @@ export const STAGES = [
       missionBrief: "The protocol ends here. The deer don't care about your degree. Ronnie would have loved this park. Look toward the horizon — your next chapter begins somewhere over there.",
       task: "Final photo — both of you, together, on the Mound.",
       wordHalf: "LAUDE",
-      clue: "Your half sounds like something your Gujarati/Hindi-speaking friends should absolutely not be shouting in Pembroke Lodge. Five letters. Together, it becomes Marion's academic flex.",
+      clue: "Your fragment sounds like something your Gujarati/Hindi-speaking friends should absolutely not be shouting in Pembroke Lodge. In the right academic context, it completes Pinto's final honour. Take the ending fragment.",
     },
   },
 ];
