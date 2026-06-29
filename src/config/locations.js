@@ -234,7 +234,7 @@ export const STAGES = [
       missionBrief: "GOHIL has been arrested. Again. Jai did a runner to India and left him holding the confusion at Sainsbury's. You got the call. You went. No hesitation — same as always. Authorise his release.",
       task: "Authorise bail using the code on your screen. Show it to GOHIL.",
       wordHalf: "PANEER",
-      clue: "Bail approved. Next stop is the house where sleepovers became routine, the PS5 worked overtime, and one dish became legendary. Your part is the main ingredient — six letters.",
+      clue: "Bail approved. Next stop is the house where sleepovers became routine, the PS5 worked overtime, and one dish somehow became part of the lore. Your fragment is the thing that started the whole order.",
     },
     gohil: {
       missionTitle: "The Jailbreak",
@@ -246,7 +246,7 @@ export const STAGES = [
       missionBrief: "Jai really left you holding the bag at Sainsbury's, didn't he? Thank god for Gupta. Stand by the station railings. Look like you're serving time for Jai's heist. GUPTA is arranging bail.",
       task: "Mugshot first. Then recreate the behind-bars photo at the station railings. GUPTA has the bail code — get it from him to complete the release.",
       wordHalf: "CHEESEBUTTER",
-      clue: "Release granted. Head back to the kitchen where TMKOC played in the background, COD came after, and your signature dish carried the night. Your part is the rest of the dish name, no spaces.",
+      clue: "Release granted. Head back to the kitchen where TMKOC played in the background, COD came after, and your signature order carried the night. Your fragment completes what Gupta starts.",
     },
   },
   {
