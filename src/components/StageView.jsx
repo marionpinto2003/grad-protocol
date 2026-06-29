@@ -32,6 +32,15 @@ export default function StageView({ stage, player, onComplete }) {
 
   const playerData = stage[player["id"]];
 
+  const showRouteCard = () => {
+    setPhase("routeCard");
+  };
+
+  const finishStage = () => {
+    setPhase("complete");
+    onComplete(stage.index);
+  };
+
   const scanPosition = useCallback(async () => {
     try {
       const pos = await getCurrentPosition();
@@ -68,8 +77,7 @@ export default function StageView({ stage, player, onComplete }) {
     }
 
     if (!playerData.clue) {
-      setPhase("complete");
-      onComplete(stage.index);
+      showRouteCard();
       return;
     }
 
@@ -84,8 +92,7 @@ export default function StageView({ stage, player, onComplete }) {
       if (stage.id === "wembley") {
         setPhase("dobbleDuel");
       } else {
-        setPhase("complete");
-        onComplete(stage.index);
+        showRouteCard();
       }
     } else {
       setWordError(true);
@@ -267,10 +274,7 @@ export default function StageView({ stage, player, onComplete }) {
                 unlockType={stage.unlockType}
                 capturedPhoto={capturedPhoto}
                 onProceedToUnlock={() => setPhase("wordUnlock")}
-                onProceedToComplete={() => {
-                  setPhase("complete");
-                  onComplete(stage.index);
-                }}
+                onProceedToComplete={showRouteCard}
                 player={player}
               />
             )}
@@ -297,10 +301,9 @@ export default function StageView({ stage, player, onComplete }) {
 
       {phase === "routeCard" && (
         <RouteCard
-          onComplete={() => {
-            setPhase("complete");
-            onComplete(stage.index);
-          }}
+          stage={stage}
+          player={player}
+          onComplete={finishStage}
         />
       )}
 
@@ -330,7 +333,88 @@ export default function StageView({ stage, player, onComplete }) {
 
 
 
-function RouteCard({ onComplete }) {
+
+function RouteCard({ stage, player, onComplete }) {
+  const routeCards = {
+    temple: {
+      leg: "LEG 02 · HIGH ROAD SECTOR",
+      title: "J.J. MOON'S UNLOCKED",
+      subtitle: "Blessings secured · First checkpoint open",
+      clearance: "Darshan complete. Spiritual clearance approved.",
+      destination: "Make your way to J.J. Moon's on Wembley High Road.",
+      nextLeg: player?.id === "gohil"
+        ? "Date-night tradition. Strongbow Dark Fruit. Sticky-floor diplomacy."
+        : "Guinness protocol. Moon-coded pub. One abandoned Maverick costume."
+    },
+    spoons: {
+      leg: "LEG 03 · WEMBLEY FUEL SECTOR",
+      title: "FUNKY CHIPS UNLOCKED",
+      subtitle: "Pub protocol cleared · Emergency food route open",
+      clearance: player?.id === "gohil"
+        ? "Strongbow protocol complete. Pinto date-spot checkpoint cleared."
+        : "Guinness protocol complete. Moon landing successfully survived.",
+      destination: "Proceed to Funky Chips for masala chips, cheese, and Pinto-funded damage control.",
+      nextLeg: "Fuel stop. Photo proof. Then the NAVRATRI key comes online."
+    },
+    wembley: {
+      leg: "LEG 04 · ROYALE LEISURE PARK",
+      title: "ARCADE SECTOR UNLOCKED",
+      subtitle: "NAVRATRI accepted · Dobble Detour resolved",
+      clearance: "NAVRATRI key accepted. Pinto has approved onward travel.",
+      destination: "Make your way west to Royale Leisure Park, Western Avenue.",
+      nextLeg: "Pool tables. Punch machine. Reclining seats. One skipped lecture that the film absolutely did not deserve."
+    },
+    tenpin: {
+      leg: "LEG 05 · BOOKER SECTOR",
+      title: "SUPPLY RUN UNLOCKED",
+      subtitle: "Royale Rumble cleared · Domestic evidence route open",
+      clearance: "Pool and punch-machine evidence accepted.",
+      destination: "Proceed to the next supply checkpoint.",
+      nextLeg: "Limescale history. Peanut evidence. Booker chaos."
+    },
+    booker: {
+      leg: "LEG 06 · HAMMERSMITH CASE FILE",
+      title: "BAIL PROTOCOL UNLOCKED",
+      subtitle: "Supply sector cleared · Crime file opening",
+      clearance: "Evidence cleaned, recovered, or sufficiently ignored.",
+      destination: "Proceed to Hammersmith for the bail operation.",
+      nextLeg: "Mugshot. Bail code. Paneer cheese butter."
+    },
+    police: {
+      leg: "LEG 07 · TW7 QUOTE PROTOCOL",
+      title: "ISLEWORTH UNLOCKED",
+      subtitle: "Bail operation cleared · Quote archive opening",
+      clearance: "Custody resolved. Operatives released under Pinto supervision.",
+      destination: "Proceed to the TW7 memory sector.",
+      nextLeg: "Quotes, allegations, and emotional damage."
+    },
+    isleworth: {
+      leg: "LEG 08 · RAUL CAMPUS",
+      title: "RICHMOND PROTOCOL UNLOCKED",
+      subtitle: "Quote archive cleared · Final campus route open",
+      clearance: "Quote protocol accepted. Memory evidence verified.",
+      destination: "Proceed to RAUL.",
+      nextLeg: "Graduation territory. Final university chaos."
+    },
+    raul: {
+      leg: "LEG 09 · FINAL APPROACH",
+      title: "PEMBROKE LODGE UNLOCKED",
+      subtitle: "Campus protocol cleared · Final key route open",
+      clearance: "RAUL sector complete. Degree-adjacent emotions detected.",
+      destination: "Proceed to the final checkpoint.",
+      nextLeg: "Last location. Final key. Memory archive."
+    },
+  };
+
+  const card = routeCards[stage.id] || {
+    leg: "FINAL LEG",
+    title: "FINAL ROUTE UNLOCKED",
+    subtitle: "All field evidence accepted",
+    clearance: "Mission evidence verified. Final archive generation authorised.",
+    destination: "Proceed to the final objective.",
+    nextLeg: "Final debrief and memory archive."
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -343,11 +427,11 @@ function RouteCard({ onComplete }) {
         </p>
 
         <h2 className="text-2xl font-black text-green-300">
-          LEG 04 · ROYALE LEISURE PARK
+          {card.leg}
         </h2>
 
         <p className="text-green-700 text-xs uppercase tracking-widest">
-          Arcade sector unlocked · Western Avenue
+          {card.subtitle}
         </p>
       </div>
 
@@ -356,10 +440,7 @@ function RouteCard({ onComplete }) {
           <p className="text-green-500 text-xs uppercase tracking-widest mb-1">
             Clearance Summary
           </p>
-          <p>
-            NAVRATRI key accepted. Dobble Detour resolved. Pinto has approved
-            onward travel.
-          </p>
+          <p>{card.clearance}</p>
         </div>
 
         <div>
@@ -367,10 +448,9 @@ function RouteCard({ onComplete }) {
             Destination
           </p>
           <p>
-            Make your way west to{" "}
-            <span className="font-bold text-green-300">
-              Royale Leisure Park, Western Avenue
-            </span>.
+            <span className="font-bold text-green-300">{card.title}</span>
+            <br />
+            {card.destination}
           </p>
         </div>
 
@@ -378,20 +458,8 @@ function RouteCard({ onComplete }) {
           <p className="text-green-500 text-xs uppercase tracking-widest mb-1">
             Next Leg
           </p>
-          <p>
-            Pool tables. Punch machine. Reclining seats. One skipped lecture
-            that the film absolutely did not deserve.
-          </p>
+          <p>{card.nextLeg}</p>
         </div>
-      </div>
-
-      <div className="border border-amber-500/30 bg-amber-500/10 rounded-lg p-3">
-        <p className="text-amber-300 text-xs uppercase tracking-widest mb-1">
-          Field Warning
-        </p>
-        <p className="text-amber-100 text-sm">
-          Arcade Tax, if applied, must be honoured before the next objective.
-        </p>
       </div>
 
       <button
