@@ -366,43 +366,43 @@ function RouteCard({ stage, player, onComplete }) {
     },
     tenpin: {
       leg: "LEG 05 · BOOKER SECTOR",
-      title: "SUPPLY RUN UNLOCKED",
-      subtitle: "Royale Rumble cleared · Domestic evidence route open",
-      clearance: "Pool and punch-machine evidence accepted.",
-      destination: "Proceed to the next supply checkpoint.",
-      nextLeg: "Limescale history. Peanut evidence. Booker chaos."
+      title: "BOOKER UNLOCKED",
+      subtitle: "Royale Rumble cleared · Emergency supply route open",
+      clearance: "Pool table survived. Punch-machine evidence accepted. Cinema judgement remains pending.",
+      destination: "Proceed to Booker — the only place where one mission can involve both limescale warfare and peanut evidence.",
+      nextLeg: "Nirali has been forgiven. The bathroom evidence has not."
     },
     booker: {
       leg: "LEG 06 · HAMMERSMITH CASE FILE",
       title: "BAIL PROTOCOL UNLOCKED",
-      subtitle: "Supply sector cleared · Crime file opening",
-      clearance: "Evidence cleaned, recovered, or sufficiently ignored.",
-      destination: "Proceed to Hammersmith for the bail operation.",
-      nextLeg: "Mugshot. Bail code. Paneer cheese butter."
+      subtitle: "Booker evidence cleared · Custody file opening",
+      clearance: "Limescale neutralised. Peanut evidence processed. Pinto's domestic incident archive remains classified.",
+      destination: "Proceed to Hammersmith, where one operative enters the system and the other becomes the only hope of release.",
+      nextLeg: "Mugshot first. Bail code second. Paneer cheese butter if both operatives cooperate."
     },
     police: {
       leg: "LEG 07 · TW7 QUOTE PROTOCOL",
       title: "ISLEWORTH UNLOCKED",
       subtitle: "Bail operation cleared · Quote archive opening",
-      clearance: "Custody resolved. Operatives released under Pinto supervision.",
-      destination: "Proceed to the TW7 memory sector.",
-      nextLeg: "Quotes, allegations, and emotional damage."
+      clearance: "Custody resolved. Bail authorised. Both operatives have been released under strict Pinto supervision.",
+      destination: "Proceed to the TW7 memory sector — where too many quotes were said with too much confidence.",
+      nextLeg: "Identify the speaker. Survive the allegations. Unlock the archive."
     },
     isleworth: {
       leg: "LEG 08 · RAUL CAMPUS",
-      title: "RICHMOND PROTOCOL UNLOCKED",
-      subtitle: "Quote archive cleared · Final campus route open",
-      clearance: "Quote protocol accepted. Memory evidence verified.",
-      destination: "Proceed to RAUL.",
-      nextLeg: "Graduation territory. Final university chaos."
+      title: "RAUL UNLOCKED",
+      subtitle: "Quote archive cleared · Campus route open",
+      clearance: "Quote protocol accepted. The archive confirms that nobody in this group has ever spoken normally.",
+      destination: "Proceed to RAUL — where the degree became real, the chaos became official, and everyone somehow survived.",
+      nextLeg: "Campus evidence. Final university protocol. One last academic side quest."
     },
     raul: {
       leg: "LEG 09 · FINAL APPROACH",
       title: "PEMBROKE LODGE UNLOCKED",
-      subtitle: "Campus protocol cleared · Final key route open",
-      clearance: "RAUL sector complete. Degree-adjacent emotions detected.",
-      destination: "Proceed to the final checkpoint.",
-      nextLeg: "Last location. Final key. Memory archive."
+      subtitle: "RAUL protocol cleared · Final route open",
+      clearance: "Campus evidence accepted. Degree unlocked. Emotional damage levels rising.",
+      destination: "Proceed to Pembroke Lodge — final checkpoint, final key, final proof that Richmond was never just about the degree.",
+      nextLeg: "One last unlock. One final debrief. Memory archive generation begins."
     },
   };
 
