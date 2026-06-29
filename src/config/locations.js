@@ -58,6 +58,7 @@ export const STAGES = [
       missionBrief: "Jethalal says: 'Naha-dho ke path-puja karke nikalne ka!' Before the next chapter begins, you need a different kind of routing for your soul. Head to the intricate white stone palace where you can pray that your USC roommates aren't as 'Nonsense' as Pinto was when she failed her own climbing test right in front of us.",
       task: "Stand before the main shrine together. Hands folded, eyes closed. Make a silent wish for the year ahead — LA, the future, all of it. Photo after.",
       clue: "Darshan complete. Blessings secured. Your next checkpoint is not in the sky, but it does involve a moon. Follow the High Road to the pub whose name accidentally preserves the memory of one abandoned Maverick costume.",
+      completeText: "ROUTE CARD READY · High Road sector unlocked.",
     },
     gohil: {
       missionTitle: "Permission from Bapuji",
@@ -69,6 +70,7 @@ export const STAGES = [
       missionBrief: "In true Pinto style, no mission starts without blessings first. Before the chaos, the food, the games, and the questionable decisions, report to the place that looks like it was rendered straight out of Pandora but still feels like home. Darshan first. Side quest later.",
       task: "Stand before the main shrine together. Hands folded, eyes closed. Make a silent wish for the year ahead. Photo after.",
       clue: "Darshan complete. Blessings secured. Pinto protocol now shifts from heaven to High Road: find the place where our date-night tradition lives under a moonlit codename. Strongbow Dark Fruit awaits.",
+      completeText: "ROUTE CARD READY · High Road sector unlocked.",
     },
   },
   {
@@ -91,6 +93,7 @@ export const STAGES = [
       missionBrief: "High Road sector active. Your next checkpoint is hidden behind a failed Halloween costume, a sticky floor, and the initials of a jet pioneer paired with the ruler of the night sky.",
       task: "Split the G. Photo proof required.",
       clue: "Guinness protocol complete. The moon landing is over; now return to Earth for emergency fuel. Find the Wembley stop where masala chips, cheese, and Pinto-funded damage control are waiting.",
+      completeText: "ROUTE CARD READY · Wembley fuel sector unlocked.",
     },
     gohil: {
       missionTitle: "The Maverick Moon-Landing",
@@ -102,6 +105,7 @@ export const STAGES = [
       missionBrief: "Go to yours and Pinto's favourite date spot — the one where Strongbow Dark Fruit somehow became tradition. Look for the initials of a jet pioneer paired with the silent ruler of the night sky. If the floor isn't sticky, you're in the wrong kingdom.",
       task: "Split the G. Photo proof required. Make sure Gupta is wearing his sunglasses.",
       clue: "Strongbow protocol complete. Date-night checkpoint cleared. Now guide the team to the Wembley fuel station where masala chips, cheese, and Pinto-funded damage control are waiting.",
+      completeText: "ROUTE CARD READY · Wembley fuel sector unlocked.",
     },
   },
   {
@@ -125,7 +129,7 @@ export const STAGES = [
       missionBrief: "Jethalal says: 'Pehle bhagwan, phir khaana.' Head to the spot where masala chips and cheese are more iconic than Daya and her Garba. Marion has already paid.",
       task: "Enjoy Funky Chips — courtesy of Pinto. Take a photo.",
       wordHalf: "NAV",
-      clue: "Every October, the car park outside the Arena becomes a different world. Dandiya until midnight, the whole of Gujarat in one postcode. A Delhi boy on the side trying to copy the steps and failing completely. Your half of the unlock word: the prefix of the app that routes you safely home. Once the word is complete, head west to Royale Leisure Park — pool tables, punch machines, reclining seats, and one very questionable skipped lecture.",
+      clue: "Every October, the car park outside the Arena becomes a different world. Dandiya until midnight, the whole of Gujarat in one postcode. A Delhi boy on the side trying to copy the steps and failing completely. Your half of the unlock word: the prefix of the app that routes you safely home.",
     },
     gohil: {
       missionTitle: "The Fatakada Break",
@@ -137,7 +141,7 @@ export const STAGES = [
       missionBrief: "Masala chips. Cheese. Marion paid. Don't overthink it. Eat. Then move.",
       task: "Enjoy Funky Chips — courtesy of Pinto. Take a photo.",
       wordHalf: "RATRI",
-      clue: "Every October at Wembley Arena, you show Gupta what real culture looks like — even if he copies your steps like a glitchy NPC. In the Seven Kingdoms the Long version lasts a lifetime. In Gujarat it's just the second half of your favourite nine-day dance-off. Those five letters are yours. Once the word is complete, head west to Royale Leisure Park — where you taught Gupta pool, won everything, and still somehow agreed to a film that was not worth bunking David's class.",
+      clue: "Every October at Wembley Arena, you show Gupta what real culture looks like — even if he copies your steps like a glitchy NPC. In the Seven Kingdoms the Long version lasts a lifetime. In Gujarat it's just the second half of your favourite nine-day dance-off. Those five letters are yours.",
     },
   },
   {

@@ -21,7 +21,7 @@ import { markStageComplete } from "../utils/sync";
 import { savePhoto } from "../utils/storage";
 
 export default function StageView({ stage, player, onComplete }) {
-  const startsWithPuzzle = stage["id"] === "wembley";
+  const startsWithPuzzle = false;
   const [phase, setPhase] = useState("booting");
   const [gpsData, setGpsData] = useState({ inside: false, distance: null, accuracy: null });
   const [wordInput, setWordInput] = useState("");
@@ -79,9 +79,14 @@ export default function StageView({ stage, player, onComplete }) {
 
   const handleWordSubmit = () => {
     const combined = wordInput.trim().toUpperCase();
+
     if (combined === stage.unlockWord?.toUpperCase()) {
-      setPhase("complete");
-      onComplete(stage.index);
+      if (stage.id === "wembley") {
+        setPhase("dobbleDuel");
+      } else {
+        setPhase("complete");
+        onComplete(stage.index);
+      }
     } else {
       setWordError(true);
       setTimeout(() => setWordError(false), 1500);
@@ -168,7 +173,7 @@ export default function StageView({ stage, player, onComplete }) {
       )}
 
       <AnimatePresence>
-        {phase !== "booting" && phase !== "prePuzzle" && phase !== "complete" && (
+        {phase !== "booting" && phase !== "prePuzzle" && phase !== "dobbleDuel" && phase !== "routeCard" && phase !== "complete" && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -283,6 +288,22 @@ export default function StageView({ stage, player, onComplete }) {
         )}
       </AnimatePresence>
 
+      {phase === "dobbleDuel" && (
+        <DobbleDuel
+          player={player}
+          onComplete={() => setPhase("routeCard")}
+        />
+      )}
+
+      {phase === "routeCard" && (
+        <RouteCard
+          onComplete={() => {
+            setPhase("complete");
+            onComplete(stage.index);
+          }}
+        />
+      )}
+
       {phase === "complete" && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -297,11 +318,89 @@ export default function StageView({ stage, player, onComplete }) {
           >
             <span className="text-green-400 text-3xl">✓</span>
           </motion.div>
-          <p className="text-green-400 font-bold text-lg">STAGE CLEARED</p>
-          <p className="text-green-600 text-sm">Proceed to next objective.</p>
+          <p className="text-green-400 font-bold text-lg">LEG COMPLETE</p>
+          <p className="text-green-600 text-sm">
+            {playerData.completeText || "Proceed to next objective."}
+          </p>
         </motion.div>
       )}
     </div>
+  );
+}
+
+
+
+function RouteCard({ onComplete }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="border border-green-500/40 bg-black/80 rounded-xl p-5 space-y-5"
+    >
+      <div className="text-center space-y-2">
+        <p className="text-green-500 text-xs uppercase tracking-[0.35em]">
+          Route Card Received
+        </p>
+
+        <h2 className="text-2xl font-black text-green-300">
+          LEG 04 · ROYALE LEISURE PARK
+        </h2>
+
+        <p className="text-green-700 text-xs uppercase tracking-widest">
+          Arcade sector unlocked · Western Avenue
+        </p>
+      </div>
+
+      <div className="border border-green-900/60 bg-green-950/10 rounded-lg p-4 space-y-4 text-sm text-green-100 leading-relaxed">
+        <div>
+          <p className="text-green-500 text-xs uppercase tracking-widest mb-1">
+            Clearance Summary
+          </p>
+          <p>
+            NAVRATRI key accepted. Dobble Detour resolved. Pinto has approved
+            onward travel.
+          </p>
+        </div>
+
+        <div>
+          <p className="text-green-500 text-xs uppercase tracking-widest mb-1">
+            Destination
+          </p>
+          <p>
+            Make your way west to{" "}
+            <span className="font-bold text-green-300">
+              Royale Leisure Park, Western Avenue
+            </span>.
+          </p>
+        </div>
+
+        <div>
+          <p className="text-green-500 text-xs uppercase tracking-widest mb-1">
+            Next Leg
+          </p>
+          <p>
+            Pool tables. Punch machine. Reclining seats. One skipped lecture
+            that the film absolutely did not deserve.
+          </p>
+        </div>
+      </div>
+
+      <div className="border border-amber-500/30 bg-amber-500/10 rounded-lg p-3">
+        <p className="text-amber-300 text-xs uppercase tracking-widest mb-1">
+          Field Warning
+        </p>
+        <p className="text-amber-100 text-sm">
+          Arcade Tax, if applied, must be honoured before the next objective.
+        </p>
+      </div>
+
+      <button
+        onClick={onComplete}
+        className="w-full border border-green-400 text-green-300 hover:bg-green-950/40 py-3 rounded font-bold tracking-wider"
+      >
+        ACCEPT ROUTE CARD
+      </button>
+    </motion.div>
   );
 }
 
