@@ -357,7 +357,7 @@ function RouteCard({ stage, player, onComplete }) {
       nextLeg: "Find the checkpoint. Capture proof. Await the combined key."
     },
     wembley: {
-      leg: "LEG 04 · ROYALE LEISURE PARK",
+      leg: "LEG 04 · ARCADE SECTOR",
       title: "ARCADE SECTOR UNLOCKED",
       subtitle: "Combined key accepted · Dobble Detour resolved",
       clearance: "Combined key accepted. Pinto has approved onward travel.",
@@ -365,7 +365,7 @@ function RouteCard({ stage, player, onComplete }) {
       nextLeg: "Find the checkpoint. Complete the Royale Rumble. Capture proof."
     },
     tenpin: {
-      leg: "LEG 05 · BOOKER SECTOR",
+      leg: "LEG 05 · SUPPLY SECTOR",
       title: "SUPPLY SECTOR UNLOCKED",
       subtitle: "Royale Rumble cleared · Emergency supply clue active",
       clearance: "Pool table survived. Punch-machine evidence accepted. Cinema judgement remains pending.",
@@ -373,23 +373,23 @@ function RouteCard({ stage, player, onComplete }) {
       nextLeg: "Find the checkpoint. Process the domestic evidence."
     },
     booker: {
-      leg: "LEG 06 · HAMMERSMITH CASE FILE",
+      leg: "LEG 06 · CUSTODY FILE",
       title: "BAIL PROTOCOL UNLOCKED",
       subtitle: "Evidence cleared · Custody clue active",
       clearance: "Limescale neutralised. Peanut evidence processed. Pinto's domestic incident archive remains classified.",
       destination: "Decode the custody clue: one operative enters the system, the other becomes the only hope of release.",
-      nextLeg: "Mugshot first. Bail code second. Paneer cheese butter if both operatives cooperate."
+      nextLeg: "Mugshot first. Bail code second. Combined key only if both operatives cooperate."
     },
     police: {
-      leg: "LEG 07 · TW7 QUOTE PROTOCOL",
+      leg: "LEG 07 · QUOTE PROTOCOL",
       title: "QUOTE ARCHIVE UNLOCKED",
       subtitle: "Bail operation cleared · Memory clue active",
       clearance: "Custody resolved. Bail authorised. Both operatives have been released under strict Pinto supervision.",
-      destination: "Decode the TW7 memory clue — where too many quotes were said with too much confidence.",
+      destination: "Decode the memory-sector clue — where too many quotes were said with too much confidence.",
       nextLeg: "Identify the speaker. Survive the allegations. Unlock the archive."
     },
     isleworth: {
-      leg: "LEG 08 · RAUL CAMPUS",
+      leg: "LEG 08 · CAMPUS SECTOR",
       title: "CAMPUS SECTOR UNLOCKED",
       subtitle: "Quote archive cleared · University clue active",
       clearance: "Quote protocol accepted. The archive confirms that nobody in this group has ever spoken normally.",
