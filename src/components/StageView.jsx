@@ -241,7 +241,7 @@ export default function StageView({ stage, player, onComplete }) {
                     )}
 
                     {stage.validation === "arrest" && player["id"] === "gohil" && (
-                      <BailAuth onComplete={() => markTaskComplete()} stage={stage} />
+                      <GohilReleaseFlow onComplete={() => markTaskComplete()} />
                     )}
 
                     {stage.validation === "passcode" && (
@@ -372,11 +372,39 @@ function BailCodeBrief({ onComplete }) {
   );
 }
 
-function BailAuth({ onComplete, stage }) {
+function GohilReleaseFlow({ onComplete }) {
+  const [mugshotDone, setMugshotDone] = useState(false);
+
+  if (!mugshotDone) {
+    return (
+      <div className="space-y-3">
+        <div className="border border-red-800 rounded p-4 bg-red-950/20 space-y-2">
+          <p className="text-red-400 text-xs uppercase tracking-widest">⚠ Operative Detained</p>
+          <p className="text-red-300 text-sm">
+            Mugshot required before bail can be processed. Document the crime, then obtain the bail code from GUPTA.
+          </p>
+        </div>
+
+        <MugshotGenerator onComplete={() => setMugshotDone(true)} />
+      </div>
+    );
+  }
+
+  return <BailAuth onComplete={onComplete} />;
+}
+
+function BailAuth({ onComplete }) {
   const bailCode = "230425";
+  const [input, setInput] = useState("");
   const [status, setStatus] = useState("waiting");
 
-  const authoriseBail = async () => {
+  const authoriseBail = () => {
+    if (input.trim() !== bailCode) {
+      setStatus("denied");
+      setTimeout(() => setStatus("waiting"), 1200);
+      return;
+    }
+
     setStatus("authorising");
     setTimeout(() => {
       setStatus("authorised");
@@ -387,26 +415,33 @@ function BailAuth({ onComplete, stage }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
       <div className="border border-red-800 rounded p-4 bg-red-950/20 space-y-2">
-        <p className="text-red-400 text-xs uppercase tracking-widest">⚠ Operative Detained</p>
+        <p className="text-red-400 text-xs uppercase tracking-widest">⚠ Bail Code Required</p>
         <p className="text-red-300 text-sm">
-          GOHIL is being processed at Hammersmith. Bail authorisation required immediately.
+          GUPTA has recovered the bail reference. Enter the code he gives you to complete release.
         </p>
       </div>
-      {status === "waiting" && (
-        <div className="space-y-3">
-          <div className="border border-amber-800 rounded p-3 bg-amber-950/20 text-center">
-            <p className="text-amber-400 text-xs uppercase tracking-widest mb-1">Bail Reference</p>
-            <p className="text-amber-400 text-2xl font-bold tracking-widest">{bailCode}</p>
-            <p className="text-amber-500 text-xs mt-1">Show this to GOHIL</p>
-          </div>
-          <button
-            onClick={authoriseBail}
-            className="w-full border border-red-500 text-red-400 py-3 rounded hover:bg-red-950/30 transition text-sm tracking-wider"
-          >
-            [ AUTHORISE BAIL ]
-          </button>
-        </div>
+
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value.replace(/\D/g, "").slice(0, 6))}
+        onKeyDown={(e) => e.key === "Enter" && authoriseBail()}
+        placeholder="ENTER BAIL CODE"
+        className="w-full bg-black border border-amber-800 focus:border-amber-500 text-amber-400 rounded px-3 py-3 font-mono text-center text-lg tracking-[0.35em] outline-none"
+      />
+
+      {status === "denied" && (
+        <p className="text-red-400 text-xs text-center">✕ Bail reference rejected.</p>
       )}
+
+      {status === "waiting" && (
+        <button
+          onClick={authoriseBail}
+          className="w-full border border-red-500 text-red-400 py-3 rounded hover:bg-red-950/30 transition text-sm tracking-wider"
+        >
+          [ AUTHORISE RELEASE ]
+        </button>
+      )}
+
       {status === "authorising" && (
         <div className="text-center py-4 space-y-2">
           <motion.div
@@ -414,9 +449,10 @@ function BailAuth({ onComplete, stage }) {
             transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
             className="w-6 h-6 border-2 border-green-500 border-t-transparent rounded-full mx-auto"
           />
-          <p className="text-green-400 text-xs">Processing...</p>
+          <p className="text-green-400 text-xs">Processing release...</p>
         </div>
       )}
+
       {status === "authorised" && (
         <div className="border border-green-400 rounded p-3 bg-green-950/20 text-center">
           <p className="text-green-400 text-sm">✓ Bail Authorised — GOHIL Released</p>

@@ -2,14 +2,14 @@ import { motion } from "framer-motion";
 
 const MAP_POINTS = [
   { id: "temple", label: "Mandir", icon: "🛕", x: 7, y: 52, labelPos: "bottom" },
-  { id: "wembley", label: "Funky Chips", icon: "🍟", x: 15, y: 38, labelPos: "top" },
-  { id: "spoons", label: "Spoons", icon: "🍺", x: 28, y: 42, labelPos: "bottom" },
+  { id: "spoons", label: "Spoons", icon: "🍺", x: 15, y: 38, labelPos: "top" },
+  { id: "wembley", label: "Funky Chips", icon: "🍟", x: 28, y: 42, labelPos: "bottom" },
   { id: "tenpin", label: "Tenpin", icon: "🎱", x: 38, y: 55, labelPos: "bottom" },
   { id: "booker", label: "Booker", icon: "🥜", x: 47, y: 43, labelPos: "bottom" },
   { id: "police", label: "Hammersmith", icon: "🚔", x: 55, y: 57, labelPos: "bottom" },
   { id: "isleworth", label: "TW7", icon: "🏠", x: 65, y: 46, labelPos: "bottom" },
   { id: "raul", label: "RAUL", icon: "🎓", x: 76, y: 35, labelPos: "top" },
-  { id: "richmond", label: "Richmond Park", icon: "🌳", x: 81, y: 59, labelPos: "bottom" },
+  { id: "richmond", label: "Pembroke Lodge", icon: "🌳", x: 81, y: 59, labelPos: "bottom" },
 ];
 
 const ROUTE_PATH = MAP_POINTS.map((p, i) =>
