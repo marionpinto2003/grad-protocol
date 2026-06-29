@@ -125,15 +125,15 @@ export default function PhotoGallery({ player }) {
   if (photos.length === 0 && !player.finalMessage) return null;
 
   return (
-    <div className="space-y-5 font-mono text-left">
+    <div className="space-y-6 font-mono text-left">
       {player.finalMessage && (
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`border ${theme.border} rounded-lg p-4 ${theme.bg} space-y-3`}
+          className={`border ${theme.border} rounded-xl p-5 ${theme.bg} space-y-3 shadow-[0_0_24px_rgba(0,0,0,0.35)]`}
         >
           <p className={`${theme.heading} text-xs uppercase tracking-widest`}>
-            Final Transmission
+            Classified Final Transmission
           </p>
 
           <p className="text-green-300 text-sm leading-relaxed whitespace-pre-line">
@@ -153,48 +153,63 @@ export default function PhotoGallery({ player }) {
         <div className="space-y-3">
           <div className="text-center space-y-1">
             <p className="text-green-700 text-xs uppercase tracking-widest">
-              Classified Memory Archive
+              Mission Evidence Archive
             </p>
             <p className="text-green-500 text-xs">
               {photos.length} recovered field photograph{photos.length !== 1 ? "s" : ""}
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            {photos.map(({ stage, photo, title }, i) => (
-              <motion.div
-                key={stage.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.06 }}
-                className="border border-green-900 rounded overflow-hidden bg-black/50"
-              >
-                <img
-                  src={photo}
-                  alt={stage.id}
-                  className="w-full object-cover"
-                  style={{ height: "130px" }}
-                />
+          <div className="grid grid-cols-2 gap-4">
+            {photos.map(({ stage, photo, title }, i) => {
+              const tilt = [-2.5, 2, -1.5, 2.5, -2, 1.5][i % 6];
 
-                <div className="px-2 py-2 bg-black/70 space-y-2">
-                  <p className="text-green-600 text-xs truncate">
-                    {title}
-                  </p>
+              return (
+                <motion.div
+                  key={stage.id}
+                  initial={{ opacity: 0, scale: 0.92, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: i * 0.07 }}
+                  style={{ rotate: `${tilt}deg` }}
+                  className="relative bg-[#f8f1df] text-black p-2 pb-3 rounded-sm shadow-[0_14px_28px_rgba(0,0,0,0.45)]"
+                >
+                  <div className="relative">
+                    <img
+                      src={photo}
+                      alt={stage.id}
+                      className="w-full object-cover rounded-sm border border-black/10"
+                      style={{ height: "145px" }}
+                    />
 
-                  <button
-                    onClick={() =>
-                      downloadDataUrl(
-                        photo,
-                        `grad-protocol-${safeFileName(player.id)}-${safeFileName(stage.id)}.png`
-                      )
-                    }
-                    className="w-full border border-green-800 text-green-500 py-1.5 rounded hover:bg-green-950/30 transition text-[10px] tracking-wider"
-                  >
-                    [ SAVE PHOTO ]
-                  </button>
-                </div>
-              </motion.div>
-            ))}
+                    <p className="absolute top-2 left-2 border border-red-800/60 text-red-800 bg-[#f8f1df]/80 px-2 py-0.5 text-[9px] font-bold tracking-widest rotate-[-6deg]">
+                      EVIDENCE
+                    </p>
+                  </div>
+
+                  <div className="pt-2 space-y-2">
+                    <p className="text-[11px] font-bold tracking-wide truncate text-black">
+                      {title}
+                    </p>
+
+                    <p className="text-[9px] uppercase tracking-widest text-black/50">
+                      Grad Protocol · Field Photo
+                    </p>
+
+                    <button
+                      onClick={() =>
+                        downloadDataUrl(
+                          photo,
+                          `grad-protocol-${safeFileName(player.id)}-${safeFileName(stage.id)}.png`
+                        )
+                      }
+                      className="w-full border border-black/30 text-black py-1.5 rounded hover:bg-black/10 transition text-[10px] tracking-wider"
+                    >
+                      [ SAVE PHOTO ]
+                    </button>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       )}
