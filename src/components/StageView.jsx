@@ -10,6 +10,7 @@ import PhotoCapture from "./PhotoCapture";
 import CaesarCipher from "./puzzles/CaesarCipher";
 import PeanutThrow from "./puzzles/PeanutThrow";
 import LimescaleScrub from "./puzzles/LimescaleScrub";
+import BookerCodeChallenge from "./puzzles/BookerCodeChallenge";
 import FindJai from "./puzzles/FindJai";
 import QuoteMatch from "./puzzles/QuoteMatch";
 import PingPong from "./puzzles/PingPong";
@@ -113,8 +114,7 @@ export default function StageView({ stage, player, onComplete }) {
 
 
     if (id === "spoons") {return <GuinnessPenalty onComplete={() => markTaskComplete()} />;}
-    if (id === "booker" && pid === "gupta") return <PeanutThrow onComplete={() => setPuzzleDone(true)} />;
-    if (id === "booker" && pid === "gohil") return <LimescaleScrub onComplete={() => setPuzzleDone(true)} />;
+    if (id === "booker") return <BookerCodeChallenge playerId={pid} onComplete={() => setPuzzleDone(true)} />;
     if (id === "police" && pid === "gupta") return <FindJai onComplete={() => setPuzzleDone(true)} />;
     if (id === "isleworth") return <QuoteMatch onComplete={() => setPuzzleDone(true)} />;
     if (id === "raul" && pid === "gupta") return <PingPong onComplete={() => setPuzzleDone(true)} />;

@@ -198,7 +198,7 @@ export const STAGES = [
         "Locate the evidence. You know what it is.",
       ],
       missionBrief: "Don't expect anything large here — we know your nutty reputation and the specific size of your member according to the group chat. Head to the warehouse where things are bought in bulk, but the snacks are strictly peanut sized.",
-      task: "Find a bag of peanuts. Photograph yourself next to them. You know why.",
+      task: "Booker supply run. Find the tiny salted survival ration from the Lichfield files. It weighs less than your ego after a table-tennis loss. Enter its Booker product code, then take the evidence photo.",
       clue: "A friend was in trouble once. Wrong place, wrong time, someone else's fault entirely. You got the call and you went — no questions, no hesitation. Shepherd's Bush Road. That building on the corner.",
     },
     gohil: {
@@ -208,8 +208,8 @@ export const STAGES = [
         "You know this place, GOHIL...",
         "Every aisle. Every shelf. Every memory.",
       ],
-      missionBrief: "You know every shelf, every corner, every colleague. There's an aisle here that will remind you of a very specific evening — rice that tasted like a lemon had a personal vendetta, a roommate who meant well, and a 3am stomach ache that lives in infamy.",
-      task: "Find the product that made the rice interesting. Photograph it. You know the one.",
+      missionBrief: "You know every shelf, every corner, every colleague. But this one goes back further than Booker: first-date protocol, Tower of London, and the Kohinoor — one priceless stone.",
+      task: "Find the Booker weapon against the unwanted stones hiding in kettles. Enter its Booker product code, then take the evidence photo.",
       clue: "Jai called. You went. You didn't ask questions. A Sainsbury's delivery, a friend who was somehow already packed and on a flight to India before the dust settled. Every time you pass that building on Shepherd's Bush Road, you think about it.",
     },
   },
@@ -309,7 +309,7 @@ export const STAGES = [
       missionTitle: "The Legend of Building 12",
       terminalLines: [
         "RAUL Building 12 — Richmond American University London...",
-        "Four years of BSC Comp Sci...",
+        "Four years of BSc Comp Sci...",
         "David still owes you that award.",
       ],
       missionBrief: "There were classrooms in this building that saw more action than the lectures ever did. There was also a cardboard box, a Starbucks coffee, a security guard who had questions, and one Math Award David still owes you. After the match, the real trail begins.",
