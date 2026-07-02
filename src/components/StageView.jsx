@@ -381,7 +381,7 @@ function RouteCard({ stage, player, onComplete }) {
       nextLeg: "Mugshot first. Bail code second. Combined key only if both operatives cooperate."
     },
     police: {
-      leg: "LEG 07 · QUOTE PROTOCOL",
+      leg: "LEG 07 · BOLLYWOOD PROTOCOL",
       title: "QUOTE ARCHIVE UNLOCKED",
       subtitle: "Bail operation cleared · Memory clue active",
       clearance: "Custody resolved. Bail authorised. Both operatives have been released under strict Pinto supervision.",
@@ -392,7 +392,7 @@ function RouteCard({ stage, player, onComplete }) {
       leg: "LEG 08 · CAMPUS SECTOR",
       title: "CAMPUS SECTOR UNLOCKED",
       subtitle: "Quote archive cleared · University clue active",
-      clearance: "Quote protocol accepted. The archive confirms that nobody in this group has ever spoken normally.",
+      clearance: "Bollywood protocol accepted. The archive confirms that nobody in this group has ever performed normally.",
       destination: "Decode the campus clue — where the degree became real, the chaos became official, and everyone somehow survived.",
       nextLeg: "Find the checkpoint. Complete final university protocol."
     },

@@ -1,118 +1,70 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const QUOTES = [
+const CHALLENGES = [
   {
-    quote: "A Lannister always pays his debts.",
-    answer: "Tyrion Lannister",
-    options: ["Tyrion Lannister", "Cersei Lannister", "Jon Snow", "Varys"],
+    id: "sheila",
+    title: "Sheila Ki Jawani",
+    image: "/bollywood/sheila.jpeg",
+    instruction: "Do the hook step or sing the hook. Full confidence required.",
   },
   {
-    quote: "Babita ji... aap toh kamaal karti hain.",
-    answer: "Jethalal Gada",
-    options: ["Jethalal Gada", "Taarak Mehta", "Bhide", "Popatlal"],
+    id: "chikni",
+    title: "Chikni Chameli",
+    image: "/bollywood/chikni.jpeg",
+    instruction: "Do the iconic step or sing the hook. No lazy performance.",
   },
   {
-    quote: "Chaos isn't a pit. Chaos is a ladder.",
-    answer: "Littlefinger",
-    options: ["Littlefinger", "Varys", "Tyrion Lannister", "Cersei Lannister"],
-  },
-  {
-    quote: "Ae Daya! Darvaazo tod do!",
-    answer: "Jethalal Gada",
-    options: ["Jethalal Gada", "Taarak Mehta", "Popatlal", "Bhide"],
-  },
-  {
-    quote: "The night is dark and full of terrors.",
-    answer: "Melisandre",
-    options: ["Melisandre", "Cersei Lannister", "Sansa Stark", "Daenerys"],
-  },
-  {
-    quote: "Mein aur meri tanhaai... aksar yeh baatein karte hain.",
-    answer: "Popatlal",
-    options: ["Popatlal", "Jethalal Gada", "Bhide", "Taarak Mehta"],
-  },
-  {
-    quote: "Dracarys.",
-    answer: "Daenerys",
-    options: ["Daenerys", "Melisandre", "Cersei Lannister", "Sansa Stark"],
-  },
-  {
-    quote: "Nonsense! Bilkul nonsense!",
-    answer: "Bapuji",
-    options: ["Bapuji", "Jethalal Gada", "Popatlal", "Taarak Mehta"],
+    id: "fevicol",
+    title: "Fevicol Se",
+    image: "/bollywood/fevicol.jpeg",
+    instruction: "Do the step or sing the hook. Make it shameless.",
   },
 ];
 
-const PASS_SCORE = 6;
-
-function shuffleOptions(options) {
-  return [...options].sort(() => Math.random() - 0.5);
-}
-
 export default function QuoteMatch({ onComplete }) {
   const [phase, setPhase] = useState("intro");
-  const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [feedback, setFeedback] = useState(null); // "correct" | "wrong"
+  const [completed, setCompleted] = useState([]);
+  const [activeId, setActiveId] = useState(null);
 
-  const shuffledQuotes = useMemo(() => {
-    return QUOTES.map((quote) => ({
-      ...quote,
-      options: shuffleOptions(quote.options),
-    }));
-  }, []);
+  const cleared = completed.length === CHALLENGES.length;
 
-  const q = shuffledQuotes[current];
-
-  const handleAnswer = (option) => {
-    if (feedback) return;
-    setSelected(option);
-    const correct = option === q.answer;
-    setFeedback(correct ? "correct" : "wrong");
-
-    setTimeout(() => {
-      const newScore = correct ? score + 1 : score;
-      setScore(newScore);
-      setFeedback(null);
-      setSelected(null);
-
-      if (current + 1 >= shuffledQuotes.length) {
-        if (newScore >= PASS_SCORE) {
-          setPhase("won");
-          setTimeout(() => onComplete(), 1400);
-        } else {
-          setPhase("lost");
-        }
-      } else {
-        setCurrent(current + 1);
-      }
-    }, 900);
+  const markDone = (id) => {
+    if (completed.includes(id)) return;
+    setCompleted((prev) => [...prev, id]);
+    setActiveId(id);
+    setTimeout(() => setActiveId(null), 700);
   };
 
-  const retry = () => {
-    setCurrent(0);
-    setScore(0);
-    setSelected(null);
-    setFeedback(null);
-    setPhase("playing");
+  const finish = () => {
+    if (!cleared) return;
+    setPhase("won");
+    setTimeout(() => onComplete(), 1200);
   };
 
   return (
     <div className="space-y-3 font-mono">
       <div className="text-center space-y-1">
-        <p className="text-amber-400 text-xs uppercase tracking-widest">Quote Protocol</p>
-        <p className="text-amber-700 text-xs">TMKOC or GOT — who said it?</p>
+        <p className="text-amber-400 text-xs uppercase tracking-widest">
+          Bollywood Performance Protocol
+        </p>
+        <p className="text-amber-700 text-xs">
+          Complete all 3 performances.
+        </p>
       </div>
 
       {phase === "intro" && (
         <div className="space-y-3">
           <div className="border border-amber-900/50 rounded p-4 bg-black/30 text-center space-y-2">
-            <p className="text-amber-400 text-sm">Two worlds. Eight quotes.</p>
-            <p className="text-amber-700 text-xs">Gokuldham Society meets Westeros. Match the quote to the character.</p>
-            <p className="text-amber-600 text-xs font-bold">Get {PASS_SCORE}/8 to proceed.</p>
+            <p className="text-amber-400 text-sm">
+              Isleworth energy detected.
+            </p>
+            <p className="text-amber-700 text-xs leading-relaxed">
+              Look at each scene. Do the dance step or sing the hook.
+              No weak performances. Someone must witness it.
+            </p>
           </div>
+
           <button
             onClick={() => setPhase("playing")}
             className="w-full border border-amber-600 text-amber-400 py-3 rounded hover:bg-amber-950/40 transition text-sm tracking-wider"
@@ -124,62 +76,107 @@ export default function QuoteMatch({ onComplete }) {
 
       {phase === "playing" && (
         <div className="space-y-3">
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs text-amber-800 px-1">
-              <span>Question {current + 1} / {shuffledQuotes.length}</span>
-              <span>Score: {score}</span>
-            </div>
-            <div className="h-2 bg-amber-950 rounded overflow-hidden border border-amber-900/60">
-              <motion.div
-                className="h-full bg-amber-500"
-                animate={{ width: `${((current + 1) / shuffledQuotes.length) * 100}%` }}
-              />
-            </div>
+          <div className="flex justify-between text-xs text-amber-800 px-1">
+            <span>Completed: {completed.length}/{CHALLENGES.length}</span>
+            <span>{cleared ? "READY" : "PENDING"}</span>
           </div>
 
-          <div className="border border-amber-900/50 rounded p-5 bg-black/40 text-center min-h-24 flex flex-col items-center justify-center space-y-2">
-            <p className="text-amber-700 text-[10px] uppercase tracking-widest">
-              Incoming quote
-            </p>
-            <p className="text-amber-300 text-base italic leading-relaxed">"{q.quote}"</p>
-          </div>
-
-          {feedback && (
+          <div className="h-2 bg-amber-950 rounded overflow-hidden border border-amber-900/60">
             <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`border rounded p-2 text-center text-xs font-bold tracking-widest ${
-                feedback === "correct"
-                  ? "border-green-500 text-green-400 bg-green-950/20"
-                  : "border-red-500 text-red-400 bg-red-950/20"
-              }`}
-            >
-              {feedback === "correct" ? "✓ CORRECT" : `✕ WRONG — IT WAS ${q.answer.toUpperCase()}`}
-            </motion.div>
-          )}
+              className="h-full bg-amber-500"
+              animate={{
+                width: `${(completed.length / CHALLENGES.length) * 100}%`,
+              }}
+            />
+          </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            {q.options.map((opt) => {
-              let style = "border-amber-900/50 text-amber-700 hover:border-amber-600 hover:text-amber-400";
-              if (selected === opt) {
-                style = feedback === "correct"
-                  ? "border-green-500 text-green-400 bg-green-950/30"
-                  : "border-red-500 text-red-400 bg-red-950/30";
-              } else if (feedback && opt === q.answer) {
-                style = "border-green-500 text-green-400 bg-green-950/30";
-              }
+          <div className="space-y-3">
+            {CHALLENGES.map((challenge) => {
+              const isDone = completed.includes(challenge.id);
+              const isActive = activeId === challenge.id;
 
               return (
-                <button
-                  key={opt}
-                  onClick={() => handleAnswer(opt)}
-                  className={`border rounded px-2 py-3 text-xs transition text-left leading-tight ${style}`}
+                <motion.div
+                  key={challenge.id}
+                  animate={
+                    isActive
+                      ? {
+                          scale: [1, 1.03, 1],
+                          boxShadow: [
+                            "0 0 0 rgba(34,197,94,0)",
+                            "0 0 25px rgba(34,197,94,0.3)",
+                            "0 0 0 rgba(34,197,94,0)",
+                          ],
+                        }
+                      : {}
+                  }
+                  className={`overflow-hidden rounded border bg-black/40 ${
+                    isDone ? "border-green-500/70" : "border-amber-900/50"
+                  }`}
                 >
-                  {opt}
-                </button>
+                  <img
+                    src={challenge.image}
+                    alt={challenge.title}
+                    className="w-full max-h-72 object-contain bg-black"
+                  />
+
+                  <div className="p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-amber-300 text-sm font-bold">
+                        {challenge.title}
+                      </p>
+                      <span>{isDone ? "✅" : "☐"}</span>
+                    </div>
+
+                    <p className="text-amber-700 text-xs leading-relaxed mt-1">
+                      {challenge.instruction}
+                    </p>
+
+                    <button
+                      onClick={() => markDone(challenge.id)}
+                      disabled={isDone}
+                      className={`mt-3 w-full rounded py-2 text-xs tracking-wider transition ${
+                        isDone
+                          ? "border border-green-700 text-green-500 opacity-70"
+                          : "border border-amber-700 text-amber-400 hover:bg-amber-950/40"
+                      }`}
+                    >
+                      {isDone ? "[ COMPLETED ]" : "[ PERFORMANCE DONE ]"}
+                    </button>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
+
+          <AnimatePresence>
+            {cleared && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="border border-green-500 rounded p-3 bg-green-950/30 text-center"
+              >
+                <p className="text-green-300 font-bold text-sm">
+                  🎬 Performance quota complete.
+                </p>
+                <p className="text-green-500 text-xs mt-1">
+                  Proceed to the evidence photo.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <button
+            onClick={finish}
+            disabled={!cleared}
+            className={`w-full py-3 rounded text-sm font-bold tracking-wider transition ${
+              cleared
+                ? "bg-green-700 text-black hover:bg-green-500"
+                : "bg-black/40 border border-amber-950 text-amber-900 cursor-not-allowed"
+            }`}
+          >
+            CONTINUE →
+          </button>
         </div>
       )}
 
@@ -189,24 +186,14 @@ export default function QuoteMatch({ onComplete }) {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center py-6 space-y-2"
         >
-          <p className="text-4xl">👑</p>
-          <p className="text-amber-400 font-bold text-lg tracking-wider">PROTOCOL CLEARED</p>
-          <p className="text-amber-700 text-xs">{score}/8 — You know your people.</p>
+          <p className="text-4xl">💃</p>
+          <p className="text-amber-400 font-bold text-lg tracking-wider">
+            PROTOCOL CLEARED
+          </p>
+          <p className="text-amber-700 text-xs">
+            Bollywood dignity successfully compromised.
+          </p>
         </motion.div>
-      )}
-
-      {phase === "lost" && (
-        <div className="text-center py-4 space-y-3">
-          <p className="text-red-400 font-bold">FAILED — {score}/8</p>
-          <p className="text-red-700 text-xs">Bapuji is disappointed. Even Popatlal got more right.</p>
-          <p className="text-red-500 text-xs font-bold mt-1">PENALTY: Chug a BuzzBall. Right now.</p>
-          <button
-            onClick={() => onComplete()}
-            className="border border-amber-600 text-amber-400 px-4 py-2 rounded text-xs tracking-wider hover:bg-amber-950/30 transition"
-          >
-            [ PENALTY ACCEPTED — PROCEED ]
-          </button>
-        </div>
       )}
     </div>
   );
