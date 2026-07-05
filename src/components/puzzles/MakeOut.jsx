@@ -14,7 +14,7 @@ export default function MakeOut({ onComplete }) {
       <div className="border border-amber-900/50 rounded p-4 bg-amber-950/10 space-y-3 text-center">
         <p className="text-4xl">🚪</p>
         <p className="text-amber-300 text-sm leading-relaxed">
-          David never gave you the certificate you deserved.
+          After Gupta plays the match with you, look for the hearts hidden around the classrooms. Follow the heart trail carefully — it leads to your Math Award.
         </p>
         <p className="text-amber-700 text-xs leading-relaxed">
           It's hidden somewhere in Building 12. Check the classrooms — you know them better than anyone. Find it.
@@ -35,7 +35,7 @@ export default function MakeOut({ onComplete }) {
           className="space-y-3"
         >
           <div className="border border-green-700 rounded p-3 bg-green-950/20 text-center">
-            <p className="text-green-400 text-sm">🏆 Certificate Recovered</p>
+            <p className="text-green-400 text-sm">🏆 Math Award Located</p>
             <p className="text-green-700 text-xs mt-1">David should have given you this years ago.</p>
           </div>
           <button

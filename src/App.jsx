@@ -95,6 +95,20 @@ export default function App() {
     }
   };
 
+  const handleDevJump = (stageIndex) => {
+    const jumpedState = {
+      ...appState,
+      currentStage: stageIndex,
+      completedStages: STAGES
+        .map((_, i) => i)
+        .filter((i) => i < stageIndex),
+    };
+
+    localStorage.setItem(`grad_protocol_state_${player.id}`, JSON.stringify(jumpedState));
+    setAppState(jumpedState);
+    setFinalScreen(false);
+  };
+
   const handleBack = () => {
     if (showProgress) {
       setShowProgress(false);
@@ -195,6 +209,30 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {import.meta.env.DEV && (
+          <div className="border border-yellow-700 rounded-lg p-3 bg-yellow-950/20 space-y-2">
+            <p className="text-yellow-400 text-xs uppercase tracking-widest">
+              DEV STAGE JUMP
+            </p>
+
+            <div className="grid grid-cols-3 gap-2">
+              {STAGES.map((stage, i) => (
+                <button
+                  key={stage.id}
+                  onClick={() => handleDevJump(i)}
+                  className={`border rounded px-2 py-2 text-xs ${
+                    appState.currentStage === i
+                      ? "border-yellow-400 text-yellow-300 bg-yellow-950/40"
+                      : "border-yellow-900 text-yellow-700"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {finalScreen ? (
           <FinalScreen player={player} startedAt={appState.startedAt} />

@@ -11,7 +11,7 @@ export default function LimescaleScrub({ onComplete }) {
           Descaling Investigation
         </p>
         <p className="text-green-300 text-sm leading-relaxed">
-          Locate the anti-limescale weapon. This is Nirali’s official redemption arc.
+          Locate the limescale remover — the Booker weapon against the unwanted stones hiding in kettles. This is Nirali’s official redemption arc.
         </p>
         <p className="text-green-700 text-xs">
           Objective: find descaler, forgive cautiously, capture evidence.

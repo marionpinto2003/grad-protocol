@@ -382,11 +382,11 @@ function RouteCard({ stage, player, onComplete }) {
     },
     police: {
       leg: "LEG 07 · BOLLYWOOD PROTOCOL",
-      title: "QUOTE ARCHIVE UNLOCKED",
-      subtitle: "Bail operation cleared · Memory clue active",
+      title: "DANCE CHALLENGE UNLOCKED",
+      subtitle: "Bail operation cleared · Memory challenge active",
       clearance: "Custody resolved. Bail authorised. Both operatives have been released under strict Pinto supervision.",
-      destination: "Decode the memory-sector clue — where too many quotes were said with too much confidence.",
-      nextLeg: "Identify the speaker. Survive the allegations. Unlock the archive."
+      destination: "Decode the memory-sector clue — where Aryan's house, late-night food, and one dance challenge are waiting.",
+      nextLeg: "Find the checkpoint. Complete the challenge. Capture proof."
     },
     isleworth: {
       leg: "LEG 08 · CAMPUS SECTOR",
