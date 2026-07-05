@@ -24,16 +24,16 @@ Pinto`,
     color: "gt",
     finalMessage: `Gohil,
 
-From the moment I met you, you’ve been expanding my world. From our first day at the Tower of London to our last day at London Zoo, you’ve shown me so many places, experiences, and little corners of London I never would have discovered on my own.
+Thank you for being my calm, and for always lifting the weight off my shoulders — whether it was my bag, an assignment, or just life in general. You have this way of making every problem feel smaller, while somehow making my world feel so much bigger. Knowing you were around always made everything feel easier.
 
-Thank you for making my world bigger, one step at a time. You’ve somehow managed to leave your mark on every part of this city, and now everywhere I go reminds me of a memory with you.
+Thank you for showing me more of the world than I ever expected. From our first day at the Tower of London to our last day at London Zoo, you’ve taken me to new places, new experiences, new foods, and so many little corners of London I never would have found on my own. You’ve left your mark on this city in the best way, and now everywhere I go reminds me of a memory with you.
 
-Thank you for all the help, support, laughs, kisses, but most of all, thank you for the cheese naan.
+Thank you for the help, the support, the laughs, the kisses, the patience, the planning, and, most importantly, the cheese naan.
 
-I love you so much, and I honestly don’t think Richmond would have been the same without you. As grateful as I am for my degree, you are without a doubt the best thing I got from Richmond.
+I love you so much. Richmond would not have been the same without you. As grateful as I am for my degree, you are, without a doubt, the best thing I got from Richmond.
 
 Lots of love,
-Pinto`,
+Pinto ♡`,
   },
 };
 
@@ -209,7 +209,7 @@ export const STAGES = [
         "Every aisle. Every shelf. Every memory.",
       ],
       missionBrief: "You know every shelf, every corner, every colleague. But this one goes back further than Booker: first-date protocol, Tower of London, and the Kohinoor — one priceless stone.",
-      task: "Find the Booker weapon against the unwanted stones hiding in kettles. Enter its Booker product code, then take the evidence photo.",
+      task: "Find the limescale remover — the Booker weapon against the unwanted stones hiding in kettles. Enter its Booker product code, then take the evidence photo.",
       clue: "Jai called. You went. You didn't ask questions. A Sainsbury's delivery, a friend who was somehow already packed and on a flight to India before the dust settled. Every time you pass that building on Shepherd's Bush Road, you think about it.",
     },
   },
@@ -266,9 +266,9 @@ export const STAGES = [
         "Home base identified...",
         "Not your house. But it felt like it.",
       ],
-      missionBrief: "TW7. The postcode that felt like home even when it wasn't yours. The kitchen. The paneer cheese butter. The nights nobody planned but everyone stayed for. Stand outside. Take the photo.",
+      missionBrief: "TW7. The postcode that felt like home even when it wasn't yours. Aryan's kitchen, the legendary dinner, TMKOC in the background, COD after, and the kind of night nobody planned but everyone stayed for. Stand outside. Take the photo.",
       task: "Photo outside the house. Then prank call Rachit — on speaker, together.",
-      clue: "SGA treasurer. SASA president. Table tennis trauma. Trini, of all people. Your honour must be restored where the lectures happened and the hub became home. Richmond American University London. Building 12.",
+      clue: "SGA treasurer. SASA president. Table tennis trauma. Trini, of all people. Your honour must be restored where the lectures happened and the hub became home.",
     },
     gohil: {
       missionTitle: "The PBM Sanctuary",
@@ -277,9 +277,9 @@ export const STAGES = [
         "Your second home.",
         "The masala is legendary here.",
       ],
-      missionBrief: "Teri kitchen. Tera chulha. Paneer cheese butter — perfect bana tha. TMKOC on in the background, COD baad mein, aur raat kab gayi pata nahi. TW7 6GH. Ek baar aur.",
+      missionBrief: "Aryan's kitchen. Aryan ka chulha. The dish was perfect, TMKOC on in the background, COD baad mein, aur raat kab gayi pata nahi. TW7 6GH. Ek baar aur.",
       task: "Photo outside. Then prank call Rachit — on speaker, together.",
-      clue: "Classrooms, cardboard boxes, Starbucks coffees, security guards with questions, Quant chaos, and the award David still owes you. Time to return to the campus that somehow survived all of it. Richmond American University London. Building 12.",
+      clue: "Classrooms, cardboard boxes, Starbucks coffees, security guards with questions, Quant chaos, and the award David still owes you. Time to return to the campus that somehow survived all of it.",
     },
   },
   {
@@ -315,7 +315,7 @@ export const STAGES = [
       missionBrief: "There were classrooms in this building that saw more action than the lectures ever did. There was also a cardboard box, a Starbucks coffee, a security guard who had questions, and one Math Award David still owes you. After the match, the real trail begins.",
       task: "After Gupta plays the match with you, look for the hearts hidden around the classrooms. Follow the heart trail carefully — it leads to your Math Award. Photo proof when you find it.",
       wordHalf: "MATE",
-      clue: "The hearts have the route. Follow them through the classrooms and claim the award waiting at the end. Your half is the ending move: when the king has nowhere left to run.",
+      clue: "The hearts have the route. Follow them through the classrooms and claim the award waiting at the end. Your half is the ending move: when the king has nowhere left to run — and somehow, what Gupta became.",
     },
   },
   {
